@@ -1,0 +1,47 @@
+//LW_ZH Movement functions
+
+//Set up an lweapon's movement.
+
+//D0- Lweapon to alter.
+//D1= Type of movement.
+//D2- Movement argument one.
+//D3- Movement argument two.
+
+// Set an lweapon's movement type
+void SetLWeaponMovement(lweapon wpn, int type, int arg, int arg2)
+{
+    wpn->Misc[LW_ZH_I_XPOS]= wpn->X;
+	wpn->Misc[LW_ZH_I_YPOS]= wpn->Y;
+    wpn->Misc[LW_ZH_I_WORK]=0;
+    wpn->Misc[LW_ZH_I_MOVEMENT]=type;
+    wpn->Misc[LW_ZH_I_MOVEMENT_ARG]=arg;
+    wpn->Misc[LW_ZH_I_MOVEMENT_ARG2]=arg2;
+    //wpn->Misc[LW_ZH_I_FLAGS]|=__LWFI_IS_LWZH_LWPN;
+	if(type!=LWM_FALL)wpn->Angular = true;
+    if(type==LWM_THROW){
+        wpn->Misc[LW_ZH_I_WORK_2]=wpn->Z;
+
+        // Necessary upward velocity to reach Link for thrown weapons
+        if(arg<=0){
+            if(Screen->NumNPCs()>0){
+				if(wpn->Misc[LW_ZH_I_WORK]==0)wpn->Misc[LW_ZH_I_WORK] = Rand(1,Screen->NumNPCs());
+				npc target_enemy = Screen->LoadNPC(wpn->Misc[LW_ZH_I_WORK]);
+				target_enemy->Misc[NPC_MISC_TARGET_NUMBER]=wpn->Misc[LW_ZH_I_WORK];
+				if(target_enemy->HP<=0)wpn->Misc[LW_ZH_I_WORK]=0;
+				if(target_enemy->Misc[NPC_MISC_TARGET_NUMBER]==wpn->Misc[LW_ZH_I_WORK]){
+					float time=Distance(wpn->X, wpn->Y, target_enemy->X,target_enemy->Y)/(wpn->Step/100);
+					wpn->Misc[LW_ZH_I_MOVEMENT_ARG]=GH_GRAVITY*time/2;
+				}
+			}
+        }
+    }
+    else if(type==LWM_FALL){
+        wpn->Z=arg;
+        wpn->Misc[LW_ZH_I_WORK_2]=arg;
+        wpn->Misc[LW_ZH_I_WORK]=GH_GRAVITY;
+    }
+	else if(type==LWM_CIRCLE)
+		wpn->Misc[LW_ZH_I_WORK]= RadtoDeg(wpn->Angle);
+		
+	
+}
