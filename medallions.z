@@ -56,6 +56,13 @@ ffc script Bombos_Spell{
 		fire->Y=Link->Y;
 		SetLWeaponFlag(fire,__LWFI_IS_LWZH_LWPN);
 		SetLWeaponFlag(fire,LWF_LINK_NO_COLL);
+		fireball= FireLWeapon(LW_SCRIPT1, Link->X + 8,
+									 Link->Y+8, __DirtoRad(i), 
+									 0, 0, SPR_NULL, SFX_FIRE, 
+									 LWF_PIERCES_ENEMIES);
+		SetLWeaponLifespan(fireball,LWL_TIMER,60);
+		SetLWeaponMovement(fireball,LWM_FULL_SCREEN,0x0c,64);
+		SetLWeaponDeathEffect(fireball,LWD_VANISH,0);
 	}
 }
 
@@ -84,6 +91,7 @@ ffc script Ether_Spell{
 		this->Y=Link->Y;
 		int i;
 		int drawlightning=Link->Y;
+		lweapon trigger;
 		lweapon fireball1[8];
 		lweapon fireball2[8];
 		int timer;
@@ -117,10 +125,13 @@ ffc script Ether_Spell{
 			SetLWeaponLifespan(fireball2[i],LWL_TIMER,180);
 			SetLWeaponDeathEffect(fireball2[i],LWD_VANISH,0);
 		}
-		lweapon trigger= FireLWeapon(LW_SCRIPT2, Link->X+8,
+		trigger= FireLWeapon(LW_SCRIPT2, Link->X + 8,
 									 Link->Y+8, DegtoRad(0), 
-									 0, 0, SPR_NULL, 0,0);
-		SetLWeaponLifespan(trigger,LWL_TIMER,10);							 
+									 0, 0, SPR_NULL, SFX_FIRE, 
+									 LWF_PIERCES_ENEMIES);
+		SetLWeaponLifespan(trigger,LWL_TIMER,60);
+		SetLWeaponMovement(trigger,LWM_FULL_SCREEN,0x06,64);
+		SetLWeaponDeathEffect(trigger,LWD_VANISH,0);								 
 	}
 }
 
@@ -167,7 +178,12 @@ ffc script Quake_Spell{
 			SetLWeaponDeathEffect(quake,LWD_VANISH,0);
 			Game->PlaySound(SFX_QUAKE);
 		}
-		trigger = FireLWeapon(LW_SCRIPT3, Link->X+8, Link->Y+8, 
-										DegtoRad(0),0, 0, SPR_NULL, 0,0);	
+		trigger= FireLWeapon(LW_SCRIPT3, Link->X + 8,
+									 Link->Y+8, DegtoRad(0), 
+									 0, 0, SPR_NULL, SFX_FIRE, 
+									 LWF_PIERCES_ENEMIES);
+		SetLWeaponLifespan(trigger,LWL_TIMER,60);
+		SetLWeaponMovement(trigger,LWM_FULL_SCREEN,0x02,64);
+		SetLWeaponDeathEffect(trigger,LWD_VANISH,0);	
 	}
 }
