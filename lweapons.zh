@@ -1,4 +1,4 @@
-//LWeapons.zh Version 1.2.7
+//LWeapons.zh Version 1.2.8
 
 //
 //Library for doing custom LWeapon movement, death effects, sounds and lifespans. With or without FFCS.
@@ -86,6 +86,7 @@ const int GEN_MISC_FLAGS			= 0;//Index used to set various flags. Shared by all 
 //Npc Misc Flags
 
 const int NPC_F_FREEZE      	   = 00000000010b;//A recently frozen enemy.
+const int NPC_F_FULL_SCREEN		   = 00000000100b;//An enemy hit by a full screen attack.
 
 //Flags for category Screen->Flags[SF_SECRETS]
 
@@ -129,6 +130,7 @@ const int LWM_SINE_WAVE         = 1;//Lweapon that moves in a sine wave.
 const int LWM_CIRCLE            = 2;//LWeapon that moves in a circle around Link.
 const int LWM_HOMING            = 3;//Lweapon that homes in on enemies.
 const int LWM_BRANG             = 5;//LWeapon that acts like a boomerang.
+const int LWM_FULL_SCREEN		= 9;//LWeapon that covers the screen.
 const int LWM_THROW             = 15;//Lweapon that is thrown.
 const int LWM_FALL              = 19;//Lweapon that falls from the air.
 
@@ -206,3 +208,4 @@ const int LWD_4_FIRES_DIAG       = 10;//At death, this lweapon makes 4 diagonal 
 const int LWD_4_FIRES_RANDOM     = 11;//At death, this lweapon makes 4 random lweapons.
 const int LWD_8_FIRES            = 12;//At death, this lweapon makes 8 lweapons in all directions.
 const int LWD_FIRE               = 14;//At death, this lweapon makes another lweapon at its location.
+
