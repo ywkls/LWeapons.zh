@@ -113,12 +113,15 @@ void UpdateLWZH(lweapon wpn){
 					__UpdateLWM_BRang(wpn);
 				else if(wpn->Misc[LW_ZH_I_MOVEMENT]==LWM_MELEE){
 					__UpdateLWM_Melee(wpn);
+				
 					//__UpdateLWE_Melee(wpn);
 				}
 				else if(wpn->Misc[LW_ZH_I_MOVEMENT]==LWM_CARRY)
 					__UpdateLWM_Carry(wpn);
 				else if(wpn->Misc[LW_ZH_I_MOVEMENT]==LWM_DUAL_FX)
 					__UpdateLWM_Dual(wpn);
+				else if(wpn->Misc[LW_ZH_I_MOVEMENT]==LWM_FULL_SCREEN)
+					__UpdateLWM_FullScreen(wpn);
 			}
         } // End movement updates
         
@@ -256,6 +259,14 @@ void __UpdateLWE_Sound(lweapon wpn){
 		wpn->Misc[LW_ZH_I_WORK]=(wpn->Misc[LW_ZH_I_WORK]+1)%wpn->Misc[LW_ZH_I_WORK_2];
 		if(wpn->Misc[LW_ZH_I_WORK]==0)Game->PlaySound(wpn->Misc[LW_ZH_I_FX]);
 	}
+}
+
+void __UpdateLWM_FullScreen(lweapon wpn){
+	if (IsOdd(wpn->Misc[LW_ZH_I_LIFESPAN_ARG])
+		&& wpn->Misc[LW_ZH_I_MOVEMENT_ARG]>0) 
+		Screen->Rectangle(4, 0, 0, 256, 176, 
+							wpn->Misc[LW_ZH_I_MOVEMENT_ARG], 1, 
+							0, 0, 0, true, wpn->Misc[LW_ZH_I_MOVEMENT_ARG2]);
 }
 
 //Handles lweapon that's blocked by a combo.
@@ -528,17 +539,18 @@ void __UpdateLWMFall(lweapon wpn)
 //Handles Lweapons that circle Link.
 
 void __UpdateLWM_Circle(lweapon wpn){
-	//if(wpn->Misc[LW_ZH_I_XPOS]==0)
-		///wpn->Misc[LW_ZH_I_XPOS]= wpn->HitXOffset;
-	//if(wpn->Misc[LW_ZH_I_YPOS]==0)
+	
+	//if(wpn->Misc[LW_ZH_I_XPOS]==0 && wpn->HitXOffset!=0)
+			//wpn->Misc[LW_ZH_I_XPOS]= wpn->HitXOffset;
+	//if(wpn->Misc[LW_ZH_I_YPOS]== 0 && wpn->HitYOffset!=0)
 		//wpn->Misc[LW_ZH_I_YPOS]= wpn->HitYOffset;	
 	wpn->Misc[LW_ZH_I_WORK]= (wpn->Misc[LW_ZH_I_WORK]
 								+((wpn->Step/100)*wpn->Misc[LW_ZH_I_MOVEMENT_ARG2]))%360;
-	
 	wpn->HitXOffset = //wpn->Misc[LW_ZH_I_XPOS]+
 						VectorX(wpn->Misc[LW_ZH_I_MOVEMENT_ARG],wpn->Misc[LW_ZH_I_WORK]);//)-(Link->X+8);
-	wpn->HitYOffset = //(wpn->Misc[LW_ZH_I_YPOS]+
+	wpn->HitYOffset = //wpn->Misc[LW_ZH_I_YPOS]+
 						VectorY(wpn->Misc[LW_ZH_I_MOVEMENT_ARG],wpn->Misc[LW_ZH_I_WORK]);//)-(Link->Y+8);
+	
 	wpn->Angle = DegtoRad(wpn->Misc[LW_ZH_I_WORK]);
 	SetLWeaponDir(wpn);
 	wpn->X=Link->X;
@@ -611,94 +623,8 @@ void __HookshotPull(lweapon wpn){
 void __NPCCollision(lweapon wpn){
 	for(int i=Screen->NumNPCs();i>0;i--){
 		npc n = Screen->LoadNPC(i);
-		if(Collision(wpn,n)){
-			if(wpn->Misc[LW_ZH_I_MOVEMENT]==LWM_DUAL_FX){
-				if(n->Defense[LWDefense(wpn->Misc[LW_ZH_I_MOVEMENT_ARG])]==NPCDT_BLOCK){
-					if(n->Defense[LWDefense(wpn->Misc[LW_ZH_I_MOVEMENT_ARG2])]==NPCDT_BLOCK)
-						__LWeaponClink(wpn,true);
-					else if(n->Defense[LWDefense(wpn->Misc[LW_ZH_I_MOVEMENT_ARG2])]==NPCDT_STUNORBLOCK)
-						__LWeaponClink(wpn,false);
-					else{
-						int HitChance = Rand(0,100);
-						if(HitChance>=51)
-							__LWeaponClink(wpn,true);
-						else{
-							if(n->Defense[LWDefense(wpn->Misc[LW_ZH_I_MOVEMENT_ARG2])]==NPCDT_HALFDAMAGE)
-								wpn->Damage/=2;
-							else if(n->Defense[LWDefense(wpn->Misc[LW_ZH_I_MOVEMENT_ARG2])]==NPCDT_QUARTERDAMAGE)
-								wpn->Damage/=4;
-							else if(n->Defense[LWDefense(wpn->Misc[LW_ZH_I_MOVEMENT_ARG2])]==NPCDT_ONEHITKILL){
-								n->HP = 0;
-								KillLWeapon(wpn);
-							}
-						}
-					}	
-				}
-				else if(n->Defense[LWDefense(wpn->Misc[LW_ZH_I_MOVEMENT_ARG])]==NPCDT_STUNORBLOCK){
-					if(n->Defense[LWDefense(wpn->Misc[LW_ZH_I_MOVEMENT_ARG2])]==NPCDT_BLOCK)
-						__LWeaponClink(wpn,true);
-					else if(n->Defense[LWDefense(wpn->Misc[LW_ZH_I_MOVEMENT_ARG2])]==NPCDT_STUNORBLOCK)
-						__LWeaponClink(wpn,false);
-					else{
-						int HitChance = Rand(0,100);
-						if(HitChance>=51)
-							__LWeaponClink(wpn,true);
-						else{
-							if(n->Defense[LWDefense(wpn->Misc[LW_ZH_I_MOVEMENT_ARG2])]==NPCDT_HALFDAMAGE)
-								wpn->Damage/=2;
-							else if(n->Defense[LWDefense(wpn->Misc[LW_ZH_I_MOVEMENT_ARG2])]==NPCDT_QUARTERDAMAGE)
-								wpn->Damage/=4;
-							else if(n->Defense[LWDefense(wpn->Misc[LW_ZH_I_MOVEMENT_ARG2])]==NPCDT_ONEHITKILL){
-								n->HP = 0;
-								KillLWeapon(wpn);
-							}
-						}
-					}	
-				}
-				else if(n->Defense[LWDefense(wpn->Misc[LW_ZH_I_MOVEMENT_ARG])]==NPCDT_HALFDAMAGE){
-					if(n->Defense[LWDefense(wpn->Misc[LW_ZH_I_MOVEMENT_ARG2])]==NPCDT_BLOCK)
-						__LWeaponClink(wpn,true);
-					else if(n->Defense[LWDefense(wpn->Misc[LW_ZH_I_MOVEMENT_ARG2])]==NPCDT_STUNORBLOCK)
-						__LWeaponClink(wpn,false);
-					else{
-						if(n->Defense[LWDefense(wpn->Misc[LW_ZH_I_MOVEMENT_ARG2])]==NPCDT_QUARTERDAMAGE)
-							wpn->Damage/=4;
-						else if(n->Defense[LWDefense(wpn->Misc[LW_ZH_I_MOVEMENT_ARG2])]==NPCDT_ONEHITKILL){
-							n->HP = 0;
-							KillLWeapon(wpn);
-						}
-						else
-							n->Damage/=2;
-					}
-				}
-				else if(n->Defense[LWDefense(wpn->Misc[LW_ZH_I_MOVEMENT_ARG])]==NPCDT_QUARTERDAMAGE){
-					if(n->Defense[LWDefense(wpn->Misc[LW_ZH_I_MOVEMENT_ARG2])]==NPCDT_BLOCK)
-						__LWeaponClink(wpn,true);
-					else if(n->Defense[LWDefense(wpn->Misc[LW_ZH_I_MOVEMENT_ARG2])]==NPCDT_STUNORBLOCK)
-						__LWeaponClink(wpn,false);
-					else{
-						if(n->Defense[LWDefense(wpn->Misc[LW_ZH_I_MOVEMENT_ARG2])]==NPCDT_HALFDAMAGE)
-							wpn->Damage/=2;
-						else if(n->Defense[LWDefense(wpn->Misc[LW_ZH_I_MOVEMENT_ARG2])]==NPCDT_ONEHITKILL){
-							n->HP = 0;
-							KillLWeapon(wpn);
-						}
-						else
-							n->Damage/=4;
-					}
-				}
-				else if(n->Defense[LWDefense(wpn->Misc[LW_ZH_I_MOVEMENT_ARG])]==NPCDT_ONEHITKILL){
-					if(n->Defense[LWDefense(wpn->Misc[LW_ZH_I_MOVEMENT_ARG2])]==NPCDT_BLOCK)
-						__LWeaponClink(wpn,true);
-					else if(n->Defense[LWDefense(wpn->Misc[LW_ZH_I_MOVEMENT_ARG2])]==NPCDT_STUNORBLOCK)
-						__LWeaponClink(wpn,false);
-					else{
-						n->HP = 0;
-						KillLWeapon(wpn);
-					}
-				}
-			}
-			else{
+		if(wpn->Misc[LW_ZH_I_MOVEMENT]!=LWM_FULL_SCREEN){
+			if(Collision(wpn,n)){
 				if(n->Defense[LWDefense(wpn->ID)]==NPCDT_BLOCK)
 					__LWeaponClink(wpn,true);
 				else if(n->Defense[LWDefense(wpn->ID)]==NPCDT_STUNORBLOCK)
@@ -710,15 +636,17 @@ void __NPCCollision(lweapon wpn){
 					   wpn->Misc[LW_ZH_I_MOVEMENT]==LWM_HOOKSHOT)
 						wpn->Misc[LW_ZH_I_FLAGS_2]|=LWF_RETURN;
 					else{
-						//if(wpn->Misc[LW_ZH_I_ON_DEATH]==LWD_FREEZE){
-							//wpn->Misc[LW_ZH_I_WORK_3]= Rand(0,255);
-							//n->Misc[NPC_MISC_TARGET_NUMBER]=wpn->Misc[LW_ZH_I_WORK_3];
-						//}
 						if((wpn->Misc[LW_ZH_I_FLAGS]&LWF_PIERCES_ENEMIES)==0)
 							KillLWeapon(wpn);
 					}
 				}
 			}
+		}
+		else if(wpn->Misc[LW_ZH_I_MOVEMENT]==LWM_FULL_SCREEN
+				&& (n->Misc[GEN_MISC_FLAGS]&NPC_F_FULL_SCREEN)==0){
+			wpn->X= n->X;
+			wpn->Y= n->Y;
+			n->Misc[GEN_MISC_FLAGS]|=NPC_F_FULL_SCREEN;
 		}
 		else{
 			if(GetLWeaponFlag2(wpn,LWF_TEMP_PIERCE))
@@ -726,6 +654,121 @@ void __NPCCollision(lweapon wpn){
 		}
 	}
 }
+
+//void __NPCCollision(lweapon wpn){
+	//for(int i=Screen->NumNPCs();i>0;i--){
+		//npc n = Screen->LoadNPC(i);
+		//if(Collision(wpn,n)){
+			//if(wpn->Misc[LW_ZH_I_MOVEMENT]==LWM_DUAL_FX){
+				//if(n->Defense[LWDefense(wpn->Misc[LW_ZH_I_MOVEMENT_ARG])]==NPCDT_BLOCK){
+					//if(n->Defense[LWDefense(wpn->Misc[LW_ZH_I_MOVEMENT_ARG2])]==NPCDT_BLOCK)
+						//__LWeaponClink(wpn,true);
+					//else if(n->Defense[LWDefense(wpn->Misc[LW_ZH_I_MOVEMENT_ARG2])]==NPCDT_STUNORBLOCK)
+						//__LWeaponClink(wpn,false);
+					//else{
+						//int HitChance = Rand(0,100);
+						//if(HitChance>=51)
+							//__LWeaponClink(wpn,true);
+						//else{
+							//if(n->Defense[LWDefense(wpn->Misc[LW_ZH_I_MOVEMENT_ARG2])]==NPCDT_HALFDAMAGE)
+								//wpn->Damage/=2;
+							//else if(n->Defense[LWDefense(wpn->Misc[LW_ZH_I_MOVEMENT_ARG2])]==NPCDT_QUARTERDAMAGE)
+								//wpn->Damage/=4;
+							//else if(n->Defense[LWDefense(wpn->Misc[LW_ZH_I_MOVEMENT_ARG2])]==NPCDT_ONEHITKILL){
+								//n->HP = 0;
+								//KillLWeapon(wpn);
+							//}
+						//}
+					//}	
+				//}
+				//else if(n->Defense[LWDefense(wpn->Misc[LW_ZH_I_MOVEMENT_ARG])]==NPCDT_STUNORBLOCK){
+					//if(n->Defense[LWDefense(wpn->Misc[LW_ZH_I_MOVEMENT_ARG2])]==NPCDT_BLOCK)
+						//__LWeaponClink(wpn,true);
+					//else if(n->Defense[LWDefense(wpn->Misc[LW_ZH_I_MOVEMENT_ARG2])]==NPCDT_STUNORBLOCK)
+						//__LWeaponClink(wpn,false);
+					//else{
+						//int HitChance = Rand(0,100);
+						//if(HitChance>=51)
+							//__LWeaponClink(wpn,true);
+						//else{
+							//if(n->Defense[LWDefense(wpn->Misc[LW_ZH_I_MOVEMENT_ARG2])]==NPCDT_HALFDAMAGE)
+								//wpn->Damage/=2;
+							//else if(n->Defense[LWDefense(wpn->Misc[LW_ZH_I_MOVEMENT_ARG2])]==NPCDT_QUARTERDAMAGE)
+								//wpn->Damage/=4;
+							//else if(n->Defense[LWDefense(wpn->Misc[LW_ZH_I_MOVEMENT_ARG2])]==NPCDT_ONEHITKILL){
+								//n->HP = 0;
+								//KillLWeapon(wpn);
+							//}
+						//}
+					///}	
+				//}
+				//else if(n->Defense[LWDefense(wpn->Misc[LW_ZH_I_MOVEMENT_ARG])]==NPCDT_HALFDAMAGE){
+					//if(n->Defense[LWDefense(wpn->Misc[LW_ZH_I_MOVEMENT_ARG2])]==NPCDT_BLOCK)
+						//__LWeaponClink(wpn,true);
+					//else if(n->Defense[LWDefense(wpn->Misc[LW_ZH_I_MOVEMENT_ARG2])]==NPCDT_STUNORBLOCK)
+						//__LWeaponClink(wpn,false);
+					//else{
+						//if(n->Defense[LWDefense(wpn->Misc[LW_ZH_I_MOVEMENT_ARG2])]==NPCDT_QUARTERDAMAGE)
+							//wpn->Damage/=4;
+						//else if(n->Defense[LWDefense(wpn->Misc[LW_ZH_I_MOVEMENT_ARG2])]==NPCDT_ONEHITKILL){
+							//n->HP = 0;
+							//KillLWeapon(wpn);
+						//}
+						//else
+							//n->Damage/=2;
+					//}
+				//}
+				//else if(n->Defense[LWDefense(wpn->Misc[LW_ZH_I_MOVEMENT_ARG])]==NPCDT_QUARTERDAMAGE){
+					//if(n->Defense[LWDefense(wpn->Misc[LW_ZH_I_MOVEMENT_ARG2])]==NPCDT_BLOCK)
+						//__LWeaponClink(wpn,true);
+					//else if(n->Defense[LWDefense(wpn->Misc[LW_ZH_I_MOVEMENT_ARG2])]==NPCDT_STUNORBLOCK)
+						//__LWeaponClink(wpn,false);
+					//else{
+						//if(n->Defense[LWDefense(wpn->Misc[LW_ZH_I_MOVEMENT_ARG2])]==NPCDT_HALFDAMAGE)
+							//wpn->Damage/=2;
+						//else if(n->Defense[LWDefense(wpn->Misc[LW_ZH_I_MOVEMENT_ARG2])]==NPCDT_ONEHITKILL){
+							//n->HP = 0;
+							//KillLWeapon(wpn);
+						//}
+						//else
+							//n->Damage/=4;
+					//}
+				//}
+				//else if(n->Defense[LWDefense(wpn->Misc[LW_ZH_I_MOVEMENT_ARG])]==NPCDT_ONEHITKILL){
+					//if(n->Defense[LWDefense(wpn->Misc[LW_ZH_I_MOVEMENT_ARG2])]==NPCDT_BLOCK)
+						//__LWeaponClink(wpn,true);
+					//else if(n->Defense[LWDefense(wpn->Misc[LW_ZH_I_MOVEMENT_ARG2])]==NPCDT_STUNORBLOCK)
+						//__LWeaponClink(wpn,false);
+					//else{
+						//n->HP = 0;
+						//KillLWeapon(wpn);
+					//}
+				//}
+			//}
+			//else{
+				//if(n->Defense[LWDefense(wpn->ID)]==NPCDT_BLOCK)
+					//__LWeaponClink(wpn,true);
+				//else if(n->Defense[LWDefense(wpn->ID)]==NPCDT_STUNORBLOCK)
+					//__LWeaponClink(wpn,false);
+				//else if(n->Defense[LWDefense(wpn->ID)]==NPCDT_IGNORE)
+					//SetLWeaponFlag2(wpn,LWF_TEMP_PIERCE);
+				//if(!GetLWeaponFlag2(wpn,LWF_TEMP_PIERCE)){
+					//if(wpn->Misc[LW_ZH_I_MOVEMENT]==LWM_BRANG ||
+					  // wpn->Misc[LW_ZH_I_MOVEMENT]==LWM_HOOKSHOT)
+						//wpn->Misc[LW_ZH_I_FLAGS_2]|=LWF_RETURN;
+					//else{
+						//if((wpn->Misc[LW_ZH_I_FLAGS]&LWF_PIERCES_ENEMIES)==0)
+							//KillLWeapon(wpn);
+					//}
+				//}
+			//}
+		//}
+		//else{
+			//if(GetLWeaponFlag2(wpn,LWF_TEMP_PIERCE))
+				//UnSetLWeaponFlag2(wpn,LWF_TEMP_PIERCE);
+		//}
+	//}
+//}
 
 void __LWeaponClink(lweapon wpn, bool destroy){
 	if(destroy){
