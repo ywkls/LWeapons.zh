@@ -399,8 +399,9 @@ void __UpdateLWMHoming(lweapon wpn){
 		if(wpn->Misc[LW_ZH_I_WORK]==0)wpn->Misc[LW_ZH_I_WORK] = Rand(1,Screen->NumNPCs());
 		for(int i=Screen->NumNPCs();i>0;i--){
 			target_enemy = Screen->LoadNPC(i);
-			if(target_enemy->ID==wpn->Misc[LW_ZH_I_WORK]
-				&& target_enemy->Type!=NPCT_GUY && target_enemy->Type!=NPCT_FAIRY
+			if(i=wpn->Misc[LW_ZH_I_WORK]
+				&& target_enemy->Type!=NPCT_GUY 
+				&& target_enemy->Type!=NPCT_FAIRY
 				&& target_enemy->Type!=NPCT_ROCK
 				&& (target_enemy->Defense[LWDefense(wpn->ID)]!=NPCDT_BLOCK||
 				target_enemy->Defense[LWDefense(wpn->ID)]!=NPCDT_IGNORE))
