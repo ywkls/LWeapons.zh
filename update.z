@@ -641,16 +641,18 @@ void __NPCCollision(lweapon wpn){
 					}
 				}
 			}
+			else{
+				if(GetLWeaponFlag2(wpn,LWF_TEMP_PIERCE))
+					UnSetLWeaponFlag2(wpn,LWF_TEMP_PIERCE);
+				if((n->Misc[GEN_MISC_FLAGS]&NPC_F_FULL_SCREEN)!=0)
+					n->Misc[GEN_MISC_FLAGS]&=~NPC_F_FULL_SCREEN;	
+			}
 		}
 		else if(wpn->Misc[LW_ZH_I_MOVEMENT]==LWM_FULL_SCREEN
 				&& (n->Misc[GEN_MISC_FLAGS]&NPC_F_FULL_SCREEN)==0){
 			wpn->X= n->X;
 			wpn->Y= n->Y;
 			n->Misc[GEN_MISC_FLAGS]|=NPC_F_FULL_SCREEN;
-		}
-		else{
-			if(GetLWeaponFlag2(wpn,LWF_TEMP_PIERCE))
-				UnSetLWeaponFlag2(wpn,LWF_TEMP_PIERCE);
 		}
 	}
 }
