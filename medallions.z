@@ -57,8 +57,8 @@ ffc script Bombos_Spell{
 		SetLWeaponFlag(fire,__LWFI_IS_LWZH_LWPN);
 		SetLWeaponFlag(fire,LWF_LINK_NO_COLL);
 		fireball= FireLWeapon(LW_SCRIPT1, Link->X + 8,
-									 Link->Y+8, __DirtoRad(i), 
-									 0, 0, SPR_NULL, SFX_FIRE, 
+									 Link->Y+8, DegtoRad(0), 
+									 0, 20, SPR_NULL, SFX_FIRE, 
 									 LWF_PIERCES_ENEMIES);
 		SetLWeaponLifespan(fireball,LWL_TIMER,60);
 		SetLWeaponMovement(fireball,LWM_FULL_SCREEN,0x0c,64);
@@ -127,7 +127,7 @@ ffc script Ether_Spell{
 		}
 		trigger= FireLWeapon(LW_SCRIPT2, Link->X + 8,
 									 Link->Y+8, DegtoRad(0), 
-									 0, 0, SPR_NULL, SFX_FIRE, 
+									 0, 20, SPR_NULL, SFX_FIRE, 
 									 LWF_PIERCES_ENEMIES);
 		SetLWeaponLifespan(trigger,LWL_TIMER,60);
 		SetLWeaponMovement(trigger,LWM_FULL_SCREEN,0x06,64);
@@ -180,7 +180,7 @@ ffc script Quake_Spell{
 		}
 		trigger= FireLWeapon(LW_SCRIPT3, Link->X + 8,
 									 Link->Y+8, DegtoRad(0), 
-									 0, 0, SPR_NULL, SFX_FIRE, 
+									 0, 20, SPR_NULL, SFX_FIRE, 
 									 LWF_PIERCES_ENEMIES);
 		SetLWeaponLifespan(trigger,LWL_TIMER,60);
 		SetLWeaponMovement(trigger,LWM_FULL_SCREEN,0x02,64);
