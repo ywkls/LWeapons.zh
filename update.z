@@ -264,7 +264,7 @@ void __UpdateLWE_Sound(lweapon wpn){
 void __UpdateLWM_FullScreen(lweapon wpn){
 	if (IsOdd(wpn->Misc[LW_ZH_I_LIFESPAN_ARG])
 		&& wpn->Misc[LW_ZH_I_MOVEMENT_ARG]>0) 
-		Screen->Rectangle(4, 0, 0, 256, 176, 
+		Screen->Rectangle(7, 0, 0, 256, 176, 
 							wpn->Misc[LW_ZH_I_MOVEMENT_ARG], 1, 
 							0, 0, 0, true, wpn->Misc[LW_ZH_I_MOVEMENT_ARG2]);
 }
