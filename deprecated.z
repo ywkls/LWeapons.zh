@@ -385,6 +385,33 @@ void DoDashSlash(int loc){
    }//end playsound if
 }
 
+// replaces the code in old Pegasus boots function for dash cutting through slashable combos.
+// allows easier customization to suit your needs.
+void DoDashSlash(int loc, int itmset){
+   int ctype = Screen->ComboT[loc];
+   int sprite;
+   bool playsound = false;
+   // add sprites to certain types
+   if(ctype == CT_BUSH || ctype == CT_BUSHNEXT) sprite = SPR_BUSH_CUT;
+   else if(ctype == CT_TALLGRASS || ctype == CT_TALLGRASSNEXT) sprite = SPR_GRASS_CUT;
+   else if(ctype == CT_FLOWERS) sprite = SPR_FLOWER_CUT;
+   if(ctype == CT_BUSH || ctype == CT_TALLGRASS || ctype == CT_FLOWERS || ctype == CT_SLASH || ctype == CT_SLASHITEM){
+      Screen->ComboD[loc] = Screen->UnderCombo;
+      playsound = true;
+   }
+   //these types default to next combo
+   if(ctype == CT_BUSHNEXT || ctype == CT_TALLGRASSNEXT || ctype == CT_FLOWERS || ctype == CT_SLASHNEXT || ctype == CT_SLASHNEXTITEM){
+      Screen->ComboD[loc] += 1;
+      playsound = true;
+   }
+   //no functionality added for Continuous type combos.
+   if(playsound){
+      CreateGraphicAt(sprite,ComboX(loc),ComboY(loc));
+      Game->PlaySound(SFX_GRASSCUT);
+      ItemSetAt(itmset,loc);
+   }//end playsound if
+}
+
 int CreateGraphicAt(int sprite, int x, int y){
     eweapon e = Screen->CreateEWeapon(EW_SCRIPT1);
     e->HitXOffset = 500;
