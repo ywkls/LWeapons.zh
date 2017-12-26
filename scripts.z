@@ -10,6 +10,14 @@ item script Firebar{
 				SetLWeaponLifespan(fireball,LWL_TIMER,180);
 				SetLWeaponMovement(fireball,LWM_CIRCLE,(16*i),10);
 				SetLWeaponDeathEffect(fireball,LWD_AIM_AT_NPC,10);
+				SetLWeaponHitbox(fireball,8,8,4,4);
+			}
+		}
+		else{
+			for(i= Screen->NumLWeapons();i>0;i--){
+				fireball= Screen->LoadLWeapon(i);
+				if(fireball->ID==LW_SCRIPT4)
+					KillLWeapon(fireball);
 			}
 		}
 	}
@@ -48,14 +56,11 @@ item script OmniByrna{
 				SetLWeaponDeathEffect(fireball4,LWD_VANISH,0);
 		}
 		else{
-			if(fireball1->isValid())
-				KillLWeapon(fireball1);
-			if(fireball2->isValid())
-				KillLWeapon(fireball2);
-			if(fireball3->isValid())
-				KillLWeapon(fireball3);	
-			if(fireball4->isValid())
-				KillLWeapon(fireball4);	
+			for(int i= Screen->NumLWeapons();i>0;i--){
+				fireball1= Screen->LoadLWeapon(i);
+				if(fireball1->ID==LW_SCRIPT5)
+					KillLWeapon(fireball1);
+			}
 		}
 	}
 }
