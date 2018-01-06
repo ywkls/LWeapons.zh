@@ -457,7 +457,10 @@ void __UpdateLWMThrow(lweapon wpn)
     
     // Fall
     wpn->Misc[LW_ZH_I_WORK_2]=Max(wpn->Misc[LW_ZH_I_WORK_2]+wpn->Misc[LW_ZH_I_WORK], 0);
-    wpn->Z=wpn->Misc[LW_ZH_I_WORK_2];
+    if(!IsSideview())
+	wpn->Z=wpn->Misc[LW_ZH_I_WORK_2];
+    else
+	wpn->Y = 176-wpn->Misc[LW_ZH_I_WORK_2];
     
     if(wpn->Misc[LW_ZH_I_WORK_2]>0) // Z>0
         wpn->Misc[LW_ZH_I_WORK]=Max(wpn->Misc[LW_ZH_I_WORK]-GH_GRAVITY, -GH_TERMINAL_VELOCITY);
