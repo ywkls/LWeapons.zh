@@ -19,7 +19,10 @@ void SetLWeaponMovement(lweapon wpn, int type, int arg, int arg2)
     //wpn->Misc[LW_ZH_I_FLAGS]|=__LWFI_IS_LWZH_LWPN;
 	if(type!=LWM_FALL)wpn->Angular = true;
     if(type==LWM_THROW){
-        wpn->Misc[LW_ZH_I_WORK_2]=wpn->Z;
+        if(!IsSideview())
+		wpn->Misc[LW_ZH_I_WORK_2]=wpn->Z;
+	else
+		wpn->Misc[LW_ZH_I_WORK_2]= 176->wpn->Y;
 
         // Necessary upward velocity to reach Link for thrown weapons
         if(arg<=0){
