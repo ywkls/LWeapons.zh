@@ -11,7 +11,7 @@ void SetLWeaponScript(lweapon wpn, int script_num, int Misc_Num){
 	wpn->Misc[LW_ZH_I_WORK_3]= Misc_Num;//Save a specific number.
 	//Send that number to the ffc.
 	int Args[8]= {Misc_Num};
-	RunFFCScript(script_num,Args);
+	NewFFCScript(script_num,Args);
 }
 
 // Draw a shadow under an lweapon
