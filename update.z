@@ -1152,6 +1152,11 @@ void __UpdateLWM_Melee(lweapon wpn){
 		int loc = ComboAt(wpn->X+8,wpn->Y+8);
 		DoDashSlash(loc);
 	}
+	if((wpn->Misc[LW_ZH_I_MOVEMENT_ARG2]&LWMF_POUND)!=0){
+		int loc = ComboAt(wpn->X+8,wpn->Y+8);
+		if(ComboT(loc,CT_POUND))
+			Screen->ComboD[loc]++;
+	}
 }
 
 void __FlagTrigger(lweapon wpn){
