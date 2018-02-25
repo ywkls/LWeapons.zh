@@ -24,23 +24,23 @@ void __CollDetectFix(){
 void __ReflectedFix1(){
 	 for(int i=Screen->NumLWeapons(); i>0; i--){
 		lweapon wpn=Screen->LoadLWeapon(i);
-		
-		// If this is a dummy, or if it's not a ghost.zh weapon, don't do anything
-		if((wpn->Misc[LW_ZH_I_FLAGS]&__LWFI_IS_LWZH_LWPN)==0)
-			continue;
-	
-		if(wpn->ID== LW_REFMAGIC||
-			wpn->ID== LW_REFFIREBALL||
-			wpn->ID== LW_REFROCK||
-			wpn->ID== LW_REFBEAM){
-			if(LinkCollision(wpn))
-				wpn->CollDetection = false;
-			else
-				wpn->CollDetection = true;
+		if(!GetLWeaponFlag2(wpn,LWF_NO_COLLISION)){
+			// If this is a dummy, or if it's not a ghost.zh weapon, don't do anything
+			if((wpn->Misc[LW_ZH_I_FLAGS]&__LWFI_IS_LWZH_LWPN)==0)
+				continue;
+			if(wpn->ID== LW_REFMAGIC||
+				wpn->ID== LW_REFFIREBALL||
+				wpn->ID== LW_REFROCK||
+				wpn->ID== LW_REFBEAM){
+				if(LinkCollision(wpn))
+					wpn->CollDetection = false;
+				else
+					wpn->CollDetection = true;
+				
+			}
 		}
     }
 }
-
 void __Carry_InputBlock(){
 	if(NumMoveLWeapons(LWM_CARRY)!=0){
 		lweapon wpn = FindLWeaponMove(LWM_CARRY);
@@ -73,14 +73,16 @@ void UpdateLWZH2(){
 }
 
 void __ReflectedFix2(lweapon wpn){
-	if(wpn->ID== LW_REFMAGIC||
-		wpn->ID== LW_REFFIREBALL||
-		wpn->ID== LW_REFROCK||
-		wpn->ID== LW_REFBEAM){
-		if(LinkCollision(wpn))
-			wpn->CollDetection = false;
-		else
-			wpn->CollDetection = true;
+	if(!GetLWeaponFlag2(wpn,LWF_NO_COLLISION))
+		if(wpn->ID== LW_REFMAGIC||
+			wpn->ID== LW_REFFIREBALL||
+			wpn->ID== LW_REFROCK||
+			wpn->ID== LW_REFBEAM){
+			if(LinkCollision(wpn))
+				wpn->CollDetection = false;
+			else
+				wpn->CollDetection = true;
+		}
 	}
 }
 
