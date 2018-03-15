@@ -495,7 +495,7 @@ item script Spear{
 										__DirtoRad(Link->Dir), 0, Damage, 
 										SPR_SPEAR_RT, sfx, LWF_PIERCES_ENEMIES,2,1);								
 			SetLWeaponLifespan(spear,LWL_TIMER,10);
-			SetLWeaponMovement(spear,LWM_MELEE,0,LWMF_SLASH);
+			SetLWeaponMovement(spear,LWM_MELEE,0,LWMF_SLASH|LWMF_REFLECTS_EWPN);
 			SetLWeaponDeathEffect(spear,LWD_VANISH,0);
 			Link->Action = LA_ATTACKING;
 		}
