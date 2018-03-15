@@ -15,7 +15,7 @@ void SetLWeaponScript(lweapon wpn, int script_num, int Misc_Num){
 }
 
 // Draw a shadow under an lweapon
-void DrawLWeaponShadow(lweapon wpn)
+void __DrawLWeaponShadow(lweapon wpn)
 {
     
     int x=CenterX(wpn)-8+wpn->DrawXOffset;
