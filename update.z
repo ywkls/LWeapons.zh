@@ -190,7 +190,7 @@ void UpdateLWZH(lweapon wpn){
 		if((wpn->Misc[LW_ZH_I_FLAGS_2]&LWF_KNOCKBACK_OFF)!=0)
 			__UpdateLWF_Knockback();
 		if(GetLWeaponFlag2(wpn,LWF_SHADOW))
-			DrawLWeaponShadow(wpn);	
+			__DrawLWeaponShadow(wpn);	
     }
 	
     // Start death effects
@@ -252,6 +252,65 @@ void UpdateLWZH(lweapon wpn){
 		__UpdateLWF_Link_CollOff();	
 	//if((wpn->Misc[LW_ZH_I_FLAGS]&LWF_POISON)!=0)
 		//__UpdateLWF_Poison(wpn);
+}
+
+void __UpdateLWMF_Reflect_EWpn(lweapon wpn){
+	eweapon EWpn;
+	for(int i = Screen->NumEWeapons();i>0;i--){
+		EWpn= Screen->LoadEWeapon(i);
+		if(EWpn->ID==EW_MAGIC||EWpn->ID==EW_FIREBALL
+			||EWpn->ID==EW_BEAM||EWpn->ID==EW_ROCK){
+			if(WeaponCollision(wpn,EWpn))
+				__WeaponReflect(wpn, EWpn);
+		}
+	}
+}
+
+void __WeaponReflect(lweapon wpn, eweapon a){
+	lweapon b;
+	if(a->ID==EW_BEAM)
+		b= Screen->CreateLWeapon(LW_REFBEAM);
+	else if(a->ID==EW_MAGIC)
+		b= Screen->CreateLWeapon(LW_REFMAGIC);
+	else if(a->ID==EW_ROCK)
+		b= Screen->CreateLWeapon(LW_REFROCK);
+	else if(a->ID==EW_FIREBALL)
+		b= Screen->CreateLWeapon(LW_REFFIREBALL);	
+	b->X = a->X;
+	b->Y = a->Y;
+	b->Z = a->Z;
+	b->Jump = a->Jump;
+	b->Extend = a->Extend;
+	b->TileWidth = a->TileWidth;
+	b->TileHeight = a->TileHeight;
+	b->HitWidth = a->HitWidth;
+	b->HitHeight = a->HitHeight;
+	b->HitZHeight = a->HitZHeight;
+	b->HitXOffset = a->HitXOffset;
+	b->HitYOffset = a->HitYOffset;
+	b->DrawXOffset = a->DrawXOffset;
+	b->DrawYOffset = a->DrawYOffset;
+	b->DrawZOffset = a->DrawZOffset;
+	b->Tile = a->Tile;
+	b->CSet = a->CSet;
+	b->DrawStyle = a->DrawStyle;
+	b->OriginalTile = a->OriginalTile;
+	b->OriginalCSet = a->OriginalCSet;
+	b->FlashCSet = a->FlashCSet;
+	b->NumFrames = a->NumFrames;
+	b->Frame = a->Frame;
+	b->ASpeed = a->ASpeed;
+	b->Damage = a->Damage;
+	b->Step = a->Step;
+	b->Angle = DegtoRad(RadtoDeg(a->Angle)+180);
+	b->Angular = a->Angular;
+	b->CollDetection = a->CollDetection;
+	b->DeadState = a->DeadState;
+	b->Flash = a->Flash;
+    b->Misc[LW_ZH_I_FLAGS]=wpn->Misc[LW_ZH_I_FLAGS];
+	SetLWeaponDir(b); // After flags so unblockability is detected;
+	KillLWeapon(wpn);
+	KillEWeapon(a);
 }
 
 //Handles LWeapons that continuously make sounds.
@@ -1157,6 +1216,8 @@ void __UpdateLWM_Melee(lweapon wpn){
 		if(ComboT(loc,CT_POUND))
 			Screen->ComboD[loc]++;
 	}
+	if((wpn->Misc[LW_ZH_I_MOVEMENT_ARG2]&LWMF_REFLECTS_EWPN)!=0)
+		__UpdateLWMF_Reflect_EWpn(wpn);
 }
 
 void __FlagTrigger(lweapon wpn){
