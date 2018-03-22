@@ -261,23 +261,37 @@ void __UpdateLWMF_Reflect_EWpn(lweapon wpn){
 		if(EWpn->ID==EW_MAGIC||EWpn->ID==EW_FIREBALL
 			||EWpn->ID==EW_BEAM||EWpn->ID==EW_ROCK){
 			if(WeaponCollision(wpn,EWpn))
-				__WeaponReflect(wpn, EWpn);
+				lweapon bounce = FireReflectedLWeapon(EWpn);
 		}
 	}
 }
 
-void __WeaponReflect(lweapon wpn, eweapon a){
-	lweapon b;
-	if(a->ID==EW_BEAM)
-		b= Screen->CreateLWeapon(LW_REFBEAM);
-	else if(a->ID==EW_MAGIC)
-		b= Screen->CreateLWeapon(LW_REFMAGIC);
-	else if(a->ID==EW_ROCK)
-		b= Screen->CreateLWeapon(LW_REFROCK);
-	else if(a->ID==EW_FIREBALL)
-		b= Screen->CreateLWeapon(LW_REFFIREBALL);	
-	b->X = a->X;
-	b->Y = a->Y;
+// Fire an lweapon
+lweapon FireReflectedLWeapon(eweapon EWpn){
+    lweapon wpn;
+	if(EWpn->ID==EW_BEAM)
+		wpn= Screen->CreateLWeapon(LW_REFBEAM);
+	else if(EWpn->ID==EW_MAGIC)
+		wpn= Screen->CreateLWeapon(LW_REFMAGIC);
+	else if(EWpn->ID==EW_ROCK)
+		wpn= Screen->CreateLWeapon(LW_REFROCK);
+	else if(EWpn->ID==EW_FIREBALL)
+		wpn= Screen->CreateLWeapon(LW_REFFIREBALL);	
+    wpn->X=EWpn->X;
+    wpn->Y=EWpn->Y;
+    wpn->Step=EWpn->Step;
+    wpn->Damage=EWpn->Damage;
+    wpn->Angular=true;
+	wpn->Dir = OppositeDir(EWpn->Dir);
+	wpn->Angle= __DirtoRad(wpn->Dir);
+    __CopySprite(wpn,EWpn);
+    wpn->Misc[LW_ZH_I_FLAGS]|=__LWFI_IS_LWZH_LWPN;
+    return wpn;
+}
+
+
+
+void __CopySprite(lweapon b, eweapon a){
 	b->Z = a->Z;
 	b->Jump = a->Jump;
 	b->Extend = a->Extend;
@@ -300,17 +314,7 @@ void __WeaponReflect(lweapon wpn, eweapon a){
 	b->NumFrames = a->NumFrames;
 	b->Frame = a->Frame;
 	b->ASpeed = a->ASpeed;
-	b->Damage = a->Damage;
-	b->Step = a->Step;
-	b->Angle = DegtoRad(RadtoDeg(a->Angle)+180);
-	b->Angular = a->Angular;
-	b->CollDetection = a->CollDetection;
-	b->DeadState = a->DeadState;
-	b->Flash = a->Flash;
-    b->Misc[LW_ZH_I_FLAGS]=wpn->Misc[LW_ZH_I_FLAGS];
-	SetLWeaponDir(b); // After flags so unblockability is detected;
-	KillLWeapon(wpn);
-	KillEWeapon(a);
+	Remove(a);
 }
 
 //Handles LWeapons that continuously make sounds.
