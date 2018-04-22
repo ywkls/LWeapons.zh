@@ -509,11 +509,9 @@ item script Run_Hammer{
 		lweapon hammer = FireLWeapon(LW_REFROCK,Link->X+8, Link->Y+8,
 						__DirtoRad(Link->Dir), 0, 5, SPR_HAMMER, 0, LWF_PIERCES_ENEMIES);			
 		SetLWeaponLifespan(hammer,LWL_TIMER,30);
+		SetLWeaponMovement(hammer,LWM_MELEE,0,LWMF_POUND);
 		SetLWeaponDeathEffect(hammer,LWD_VANISH,0);
 		Game->PlaySound(SFX_HAMMER);
-		int loc = ComboAt(hammer->X+8,hammer->Y+8);
-		if(ComboT(loc,CT_POUND))
-			Screen->ComboD[loc]++;
 		Link->Action =LA_ATTACKING;
 	}
 }
