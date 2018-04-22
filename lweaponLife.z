@@ -87,7 +87,7 @@ void __DoLWeaponDeathSBombExplode(lweapon wpn)
 void __DoLWeaponDeath4FireballsHV(lweapon wpn)
 {
     for(int i=0; i<270; i+=90)
-        FireLWeapon(LW_SCRIPT1, CenterX(wpn)-8, CenterY(wpn)-8, DegtoRad(i), 200, wpn->Damage/2, wpn->Misc[LW_ZH_I_ON_DEATH_ARG], 0, 0);
+        FireLWeapon(wpn->ID, CenterX(wpn)-8, CenterY(wpn)-8, DegtoRad(i), 200, wpn->Damage/2, wpn->Misc[LW_ZH_I_ON_DEATH_ARG], 0, 0);
 	Remove(wpn);
 }
 
@@ -96,7 +96,7 @@ void __DoLWeaponDeath4FireballsHV(lweapon wpn)
 void __DoLWeaponDeath4FireballsDiag(lweapon wpn)
 {
     for(int i=45; i<315; i+=90)
-        FireLWeapon(LW_SCRIPT1, CenterX(wpn)-8, CenterY(wpn)-8, DegtoRad(i), 200, wpn->Damage/2, wpn->Misc[LW_ZH_I_ON_DEATH_ARG], 0, 0);
+        FireLWeapon(wpn->ID, CenterX(wpn)-8, CenterY(wpn)-8, DegtoRad(i), 200, wpn->Damage/2, wpn->Misc[LW_ZH_I_ON_DEATH_ARG], 0, 0);
 	Remove(wpn);
 }
 
@@ -107,12 +107,12 @@ void __DoLWeaponDeath4FireballsRand(lweapon wpn)
     if(Rand(2)==0)
     {
         for(int i=0; i<270; i+=90)
-            FireLWeapon(LW_SCRIPT1, CenterX(wpn)-8, CenterY(wpn)-8, DegtoRad(i), 200, wpn->Damage/2, wpn->Misc[LW_ZH_I_ON_DEATH_ARG], 0, 0);
+            FireLWeapon(wpn->ID, CenterX(wpn)-8, CenterY(wpn)-8, DegtoRad(i), 200, wpn->Damage/2, wpn->Misc[LW_ZH_I_ON_DEATH_ARG], 0, 0);
 	}
     else
     {
         for(int i=45; i<315; i+=90)
-            lweapon new = FireNonAngularLWeapon(LW_SCRIPT1, CenterX(wpn)-8, CenterY(wpn)-8,  DegtoRad(i), 200, wpn->Damage/2, wpn->Misc[LW_ZH_I_ON_DEATH_ARG], 0, 0);
+            lweapon new = FireNonAngularLWeapon(wpn->ID, CenterX(wpn)-8, CenterY(wpn)-8,  DegtoRad(i), 200, wpn->Damage/2, wpn->Misc[LW_ZH_I_ON_DEATH_ARG], 0, 0);
 	}
     Remove(wpn);
 }
@@ -122,7 +122,7 @@ void __DoLWeaponDeath4FireballsRand(lweapon wpn)
 void __DoLWeaponDeath8Fireballs(lweapon wpn)
 {
     for(int i=0; i<315; i+=45)
-        FireLWeapon(LW_SCRIPT1, CenterX(wpn)-8, CenterY(wpn)-8, DegtoRad(i), 200, wpn->Damage/2, wpn->Misc[LW_ZH_I_ON_DEATH_ARG], 0, 0);
+        FireLWeapon(wpn->ID, CenterX(wpn)-8, CenterY(wpn)-8, DegtoRad(i), 200, wpn->Damage/2, wpn->Misc[LW_ZH_I_ON_DEATH_ARG], 0, 0);
 	Remove(wpn);
 }
 
@@ -134,7 +134,7 @@ void __DoLWeaponDeathShaky(lweapon wpn){
 void __DoLWeaponDeath4FiresDiag(lweapon wpn)
 {
     for(int i=45; i<315; i+=90)
-        FireLWeapon(LW_SCRIPT1, CenterX(wpn)-8, CenterY(wpn)-8, DegtoRad(i), 71, wpn->Damage/2, wpn->Misc[LW_ZH_I_ON_DEATH_ARG], 0, 0);
+        FireLWeapon(wpn->ID, CenterX(wpn)-8, CenterY(wpn)-8, DegtoRad(i), 71, wpn->Damage/2, wpn->Misc[LW_ZH_I_ON_DEATH_ARG], 0, 0);
 	Game->PlaySound(SFX_FIRE);
     Remove(wpn);
 }
@@ -144,12 +144,12 @@ void __DoLWeaponDeath4FiresRand(lweapon wpn)
     if(Rand(2)==0)
     {
         for(int i=0; i<270; i+=90)
-            FireNonAngularLWeapon(LW_SCRIPT1, CenterX(wpn)-8, CenterY(wpn)-8, DegtoRad(i), 100, wpn->Damage/2, wpn->Misc[LW_ZH_I_ON_DEATH_ARG], 0, 0);
+            FireNonAngularLWeapon(wpn->ID, CenterX(wpn)-8, CenterY(wpn)-8, DegtoRad(i), 100, wpn->Damage/2, wpn->Misc[LW_ZH_I_ON_DEATH_ARG], 0, 0);
 	}
     else
     {
         for(int i=45; i<315; i+=90)
-            FireLWeapon(LW_SCRIPT1, CenterX(wpn)-8, CenterY(wpn)-8, DegtoRad(i), 71, wpn->Damage/2, wpn->Misc[LW_ZH_I_ON_DEATH_ARG], 0, 0);
+            FireLWeapon(wpn->ID, CenterX(wpn)-8, CenterY(wpn)-8, DegtoRad(i), 71, wpn->Damage/2, wpn->Misc[LW_ZH_I_ON_DEATH_ARG], 0, 0);
 	}
     Game->PlaySound(SFX_FIRE);
     Remove(wpn);
@@ -160,7 +160,7 @@ void __DoLWeaponDeath8Fires(lweapon wpn)
     for(int i=0; i<270; i+=90)
         FireLWeapon(LW_SCRIPT1, CenterX(wpn)-8, CenterY(wpn)-8, DegtoRad(i), 100, wpn->Damage/2, wpn->Misc[LW_ZH_I_ON_DEATH_ARG], 0, 0);
 	for(int i=45; i<315; i+=90)
-		FireNonAngularLWeapon(LW_SCRIPT1, CenterX(wpn)-8, CenterY(wpn)-8, DegtoRad(i), 71, wpn->Damage/2, wpn->Misc[LW_ZH_I_ON_DEATH_ARG], 0, 0);
+		FireNonAngularLWeapon(wpn->ID, CenterX(wpn)-8, CenterY(wpn)-8, DegtoRad(i), 71, wpn->Damage/2, wpn->Misc[LW_ZH_I_ON_DEATH_ARG], 0, 0);
 	Game->PlaySound(SFX_FIRE);
     Remove(wpn);
 }
