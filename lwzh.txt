@@ -1,6 +1,4 @@
-//A custom script header for advanced movement and effects
-
-//Lweapons.zh Version 1.2.7
+//Lweapons.zh Version 1.3.5
 
 +-------+
 | USAGE |
@@ -82,14 +80,7 @@ LW_ZH_I_FLAGS
  *	While this lweapon is active, Link floats above the surface.
  *	Floats in midair if sideview gravity is active.
  *
-//* LWF_CAN_REFLECT         
-//*	This lweapon is reflected off of magic mirrors.
-//*	Not yet fully supported.
-//*
-//* LWF_POISON
-//*  Uses to make an Lweapon poison an enemy.
-//*  Not yet fully supported.
- 
+
  
  LW_ZH_I_FLAGS_2
  
@@ -118,6 +109,9 @@ LW_ZH_I_FLAGS
  * LWF_TEMP_PIERCE
  *	Signals that this lweapon has hit an enemy which ignores it.
  *  Used internally to counter death effects.
+ *
+ * LWF_SHADOW
+ *  The lweapon casts a shadow.
  *
 //* LWF_WAS_REFLECTED
 //*  Signals that the lweapon is currently being reflected.
@@ -183,6 +177,26 @@ void SetLWeaponMovement(lweapon wpn, int type, int arg, int arg2)
  *		This lweapon moves like a boomerang.
  *		arg: Distance the boomerang can travel, in pixels.
  *		arg2: Degrees this boomerang turns every frame when returning to Link.
+ *
+ * LWM_FULL_SCREEN
+ *		This lweapon attacks the whole screen.
+ *		arg: Color of attack.
+ *		arg2: Translucency of attack.
+ *
+ * LWM_MELEE             
+ *		This weapon acts like a melee weapon.
+ *		Most of these are not yet supported.
+ *		arg:Not Used
+ *		arg2: Special effects of weapon.
+ * 			LWMF_SLASH
+ *				This LWeapon slashes bushes, grass and pots.
+ *
+ *			LWMF_POUND
+ *				This LWeapon pounds hammer posts.
+ *
+ *			LWMF_REFLECTS_EWPN
+ *				This LWeapon reacts to EWeapon fireballs, magic or sword beams.
+ *				They are bounced back in the direction that they come.
  *
  * LWM_DUAL_FX
  * 		This lweapon sets off more than one type of flag.
