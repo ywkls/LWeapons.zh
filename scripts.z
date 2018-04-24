@@ -665,3 +665,25 @@ ffc script Bombchu_FFC{
 	}
 }
 
+item script Scripted_Shield{
+	void run(int dummy, int sprite, int sfx, int script_id, bool Button_A){
+		if(CountFFCsRunning(script_id)==0){
+			int args[8]= {sprite,sfx};
+			NewFFCScript(script_id,args);
+		}		
+	}
+}
+
+ffc script Held_Shield{
+	void run(int sprite, int sfx, bool Button_A){
+		lweapon shield = FireLWeapon(LW_SCRIPT1,Link->X,Link->Y,__DirtoRad(Link->Dir),
+										0,0,sprite,sfx,LWF_PIERCES_ENEMIES);
+		SetLWeaponMovement(shield,LWM_STRAFE,Link->Dir,LWSF_ALL);
+		SetLWeaponDeathEffect(shield,LWD_VANISH,0);
+		SetLWeaponFlag2(shield,LWF_NO_COLLISION);
+		while((Link->InputA && Button_A) ||
+				(Link->InputB && !Button_A))
+				Waitframe();
+		KillLWeapon(shield);
+	}
+}
