@@ -124,6 +124,8 @@ void UpdateLWZH(lweapon wpn){
 					__UpdateLWM_Dual(wpn);
 				else if(wpn->Misc[LW_ZH_I_MOVEMENT]==LWM_FULL_SCREEN)
 					__UpdateLWM_FullScreen(wpn);
+				else if(wpn->Misc[LW_ZH_I_MOVEMENT]==LWM_STRAFE)
+				__UpdateLWM_Strafe(wpn);	
 			}
         } // End movement updates
         
@@ -252,6 +254,58 @@ void UpdateLWZH(lweapon wpn){
 		__UpdateLWF_Link_CollOff();	
 	//if((wpn->Misc[LW_ZH_I_FLAGS]&LWF_POISON)!=0)
 		//__UpdateLWF_Poison(wpn);
+}
+
+void __UpdateLWM_Strafe(lweapon wpn){
+	int dir = wpn->Misc[LW_ZH_I_MOVEMENT_ARG];
+	Link->Dir= dir;
+	wpn->X = Link->X+InFrontX(Link->Dir,2);
+	wpn->Y = Link->Y+InFrontY(Link->Dir,2);
+	__UpdateShield(wpn);
+}
+
+void __UpdateShield(lweapon wpn){
+	for(int i = Screen->NumEWeapons();i>0;i--){
+		eweapon wpn2 = Screen->LoadEWeapon(i);
+		if(WeaponCollision(wpn,wpn2)){
+			if((wpn->Misc[LW_ZH_I_MOVEMENT_ARG2]&LWSF_ALL)!=0){
+				Remove(wpn2);
+				Game->PlaySound(SFX_CLINK);
+			}
+			else{
+				if((wpn->Misc[LW_ZH_I_MOVEMENT_ARG2]&LWSF_FIREBALL)!=0
+						&& wpn2->ID==EW_FIREBALL){
+					Remove(wpn2);
+					Game->PlaySound(SFX_CLINK);
+				}
+				if((wpn->Misc[LW_ZH_I_MOVEMENT_ARG2]&LWSF_ARROW)!=0
+							&& wpn2->ID==EW_ARROW){
+					Remove(wpn2);
+					Game->PlaySound(SFX_CLINK);
+				}	
+				if((wpn->Misc[LW_ZH_I_MOVEMENT_ARG2]&LWSF_BEAM)!=0
+							&& wpn2->ID==EW_BEAM){
+					Remove(wpn2);
+					Game->PlaySound(SFX_CLINK);
+				}
+				if((wpn->Misc[LW_ZH_I_MOVEMENT_ARG2]&LWSF_BRANG)!=0
+							&& wpn2->ID==EW_BRANG){
+					Remove(wpn2);
+					Game->PlaySound(SFX_CLINK);
+				}
+				if((wpn->Misc[LW_ZH_I_MOVEMENT_ARG2]&LWSF_MAGIC)!=0
+							&& wpn2->ID==EW_MAGIC){
+					Remove(wpn2);
+					Game->PlaySound(SFX_CLINK);
+				}
+				if((wpn->Misc[LW_ZH_I_MOVEMENT_ARG2]&LWSF_ROCK)!=0
+							&& wpn2->ID==EW_ROCK){
+					Remove(wpn2);
+					Game->PlaySound(SFX_CLINK);
+				}	
+			}
+		}
+	}
 }
 
 void __UpdateLWMF_Reflect_EWpn(lweapon wpn){
