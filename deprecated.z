@@ -255,7 +255,29 @@ bool WeaponCollision(lweapon a, npc b) {
 }
 
 //A collision between an lweapon and an npc.
+bool WeaponCollision(npc b, lweapon a) {
+  int ax = a->X + a->HitXOffset+1;
+  int bx = b->X + b->HitXOffset+1;
+  int ay = a->Y + a->HitYOffset+1;
+  int by = b->Y + b->HitYOffset+1;
+  return RectCollision(ax, ay, ax+a->HitWidth-1, ay+a->HitHeight-1, 
+						bx, by, bx+b->HitWidth-1, by+b->HitHeight-1)
+						&& (a->Z + a->HitZHeight >= b->Z) && (a->Z <= b->Z + b->HitZHeight);
+}
+
+//A collision between an lweapon and an npc.
 bool WeaponCollision(lweapon a, eweapon b) {
+  int ax = a->X + a->HitXOffset+1;
+  int bx = b->X + b->HitXOffset+1;
+  int ay = a->Y + a->HitYOffset+1;
+  int by = b->Y + b->HitYOffset+1;
+  return RectCollision(ax, ay, ax+a->HitWidth-1, ay+a->HitHeight-1, 
+						bx, by, bx+b->HitWidth-1, by+b->HitHeight-1)
+						&& (a->Z + a->HitZHeight >= b->Z) && (a->Z <= b->Z + b->HitZHeight);
+}
+
+//A collision between an lweapon and an npc.
+bool WeaponCollision(eweapon b, lweapon a) {
   int ax = a->X + a->HitXOffset+1;
   int bx = b->X + b->HitXOffset+1;
   int ay = a->Y + a->HitYOffset+1;
