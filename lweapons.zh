@@ -1,4 +1,4 @@
-//LWeapons.zh Version 1.3.8
+//LWeapons.zh Version 1.3.9
 
 //
 //Library for doing custom LWeapon movement, death effects, sounds and lifespans. With or without FFCS.
@@ -20,7 +20,7 @@ import "LW_ZH/other.z"
 import "LW_ZH/scripts.z"
 import "LW_ZH/medallions.z"
 import "LW_ZH/hookshots.z"
-//import "LW_ZH/caneofsomaria.z"
+import "LW_ZH/caneofsomaria.z"
 
 int LW_Vars[65536];//Array for extra LWeapon functions.
 
