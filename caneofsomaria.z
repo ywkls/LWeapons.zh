@@ -1,4 +1,5 @@
 const int SOMARIA_SCRIPT = 11;
+const int PRESSURE_PLATE_SCRIPT = 12;
 const int SOMARIA_COMBO = 28325;
 const int SPR_SOMARIA = 109;
 const int SFX_PUSH_SOMARIA = 88;
@@ -28,14 +29,19 @@ ffc script Somaria_Block{
 		int i;
 		int j;
 		int ComboArray[176];
+		int comboid;
 		for(j= 0;j<=175;j++){
 			ComboArray[j]= -1;
-			if(Screen->ComboT[j]==CT_STEP)
+			if(ComboFIT(j,CF_SCRIPT1,CT_SCRIPT1)){
 				ComboArray[j]= Screen->ComboD[j];
+				comboid= Screen->ComboD[j];
+			}
 		}
 		int loc;
 		int Sfx_Timer;
 		int Push_Counter;
+		int Args[8] = {comboid,CF_SCRIPT5,1};
+		NewFFCScript(PRESSURE_PLATE_SCRIPT,Args);
 		while(true){
 			while(Link->X+16< this->X-2
 					|| Link->X-2> this->X+16
@@ -331,11 +337,50 @@ ffc script Somaria_Block{
 }
 
 void SwitchCheck(int array, int loc){
-	if(Screen->ComboT[loc]==CT_STEP)
+	if(ComboFIT(loc,CF_SCRIPT1,CT_SCRIPT1))
 		Screen->ComboD[loc]++;
 	for(int i= 0;i<=175;i++){
 		if(Screen->ComboD[i]!=array[i] && i!=loc
 			&& array[i]!=-1)
 			Screen->ComboD[i]= array[i];
 	}	
+}
+
+ffc script Pressure_Plate{
+	void run(int combo, int flag, int offset){
+		this->Data = GH_INVISIBLE_COMBO;
+		this->Flags[FFCF_ETHEREAL]= true;
+		int i;
+		int Combo_Array[176];
+		int loc;
+		bool Pressed;
+		for(i= 0;i<=175;i++){
+			Combo_Array[i]= -1;
+			if(Screen->ComboD[i]==combo)
+				loc = i;
+			if(Screen->ComboF[i]==flag)
+				Combo_Array[i]= Screen->ComboD[i];
+		}
+		while(CountFFCsRunning(SOMARIA_SCRIPT)!=0){
+			if(Screen->ComboD[loc]!=combo){
+				if(!Pressed){
+					for(i= 0;i<=175;i++){
+						if(Screen->ComboF[i]==flag)
+							Screen->ComboD[i]+=offset;
+					}
+					Pressed = true;
+				}
+			}
+			else if(Screen->ComboD[loc]==combo){
+				if(Pressed){
+					for(i= 0;i<=175;i++){
+						if(Combo_Array[i]!=-1)
+							Screen->ComboD[i]= Combo_Array[i];
+					}
+					Pressed = false;
+				}
+			}
+			Waitframe();
+		}
+	}
 }
