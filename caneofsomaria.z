@@ -32,7 +32,7 @@ ffc script Somaria_Block{
 		int comboid;
 		for(j= 0;j<=175;j++){
 			ComboArray[j]= -1;
-			if(ComboFIT(j,CF_SCRIPT1,CT_SCRIPT1)){
+			if(ComboFIT(j,CF_BLOCKTRIGGER,CT_SCRIPT1)){
 				ComboArray[j]= Screen->ComboD[j];
 				comboid= Screen->ComboD[j];
 			}
@@ -337,7 +337,7 @@ ffc script Somaria_Block{
 }
 
 void SwitchCheck(int array, int loc){
-	if(ComboFIT(loc,CF_SCRIPT1,CT_SCRIPT1))
+	if(ComboFIT(loc,CF_BLOCKTRIGGER,CT_SCRIPT1))
 		Screen->ComboD[loc]++;
 	for(int i= 0;i<=175;i++){
 		if(Screen->ComboD[i]!=array[i] && i!=loc
@@ -381,6 +381,10 @@ ffc script Pressure_Plate{
 				}
 			}
 			Waitframe();
+		}
+		for(i= 0;i<=175;i++){
+			if(Combo_Array[i]!=-1)
+				Screen->ComboD[i]= Combo_Array[i];
 		}
 	}
 }
