@@ -1,4 +1,4 @@
-//LWeapons.zh Version 1.3.9
+//LWeapons.zh Version 1.4.2
 
 //
 //Library for doing custom LWeapon movement, death effects, sounds and lifespans. With or without FFCS.
@@ -26,7 +26,7 @@ int LW_Vars[65536];//Array for extra LWeapon functions.
 
 //Array Constants
 
-const int NOT_COLL = 1;//Don't reset Link's Collision detection.
+const int NOT_COLL					= 1;//Don't reset Link's Collision detection.
 
 //Misc Constants
 
@@ -133,6 +133,7 @@ const int LWM_BRANG             = 5;//LWeapon that acts like a boomerang.
 const int LWM_FULL_SCREEN		= 9;//LWeapon that covers the screen.
 const int LWM_STRAFE 			= 10;//LWeapon that causes strafing movement.
 const int LWM_THROW             = 15;//Lweapon that is thrown.
+const int LWM_BOUNCE			= 16;//LWeapon that bounces off walls.
 const int LWM_FALL              = 19;//Lweapon that falls from the air.
 
 //Not fully supported movement types.
@@ -144,16 +145,16 @@ const int LWM_CARRY				= 8;//This lweapon remains at rest relative to link.
 
 // Flags used by certain Lweapon movement types
 
-const int LWMF_DIE 		= 00000000001b;//This weapon dies when it stops moving.
-const int LWMF_REST		= 00000000010b;//This weapon rests when it stops moving.
-const int LWMF_BOUNCE 	= 00000000100b;//This weapon bounces when it hits the ground.
-const int LWMF_SLASH 	= 00000001000b;//This weapon slashs bushs, flowers and other combos.
-const int LWMF_POUND 	= 00000010000b;//This weapon pounds hammer pegs.
+const int LWMF_DIE 					= 00000000001b;//This weapon dies when it stops moving.
+const int LWMF_REST					= 00000000010b;//This weapon rests when it stops moving.
+const int LWMF_BOUNCE 				= 00000000100b;//This weapon bounces when it hits the ground.
+const int LWMF_SLASH 				= 00000001000b;//This weapon slashs bushs, flowers and other combos.
+const int LWMF_POUND 				= 00000010000b;//This weapon pounds hammer pegs.
 const int LWMF_REFLECTS_EWPN		= 00010000000b;//This lweapon reflects Eweapons.
 
 //Shield flags for strafing Lweapons
 
-const int LWSF_FIREBALL			= 00000000001b;//Blocks fireballs.
+const int LWSF_FIREBALL				= 00000000001b;//Blocks fireballs.
 const int LWSF_BEAM					= 00000000010b;//Blocks sword beams
 const int LWSF_ARROW 				= 00000000100b;//Blocks arrows.
 const int LWSF_ROCK 				= 00000001000b;//Blocks rocks.
@@ -199,7 +200,6 @@ const int LWF_SHADOW			   = 01000000000b;//This lweapon casts a shadow.
 
 const int LWF_RETURN               = 00000010000b;//This lweapon is returning to the user.
 const int LWF_TEMP_PIERCE      	   = 10000000000b;//An lweapon that is colliding with an enemy which ignores it.
-const int LWF_WAS_REFLECTED		   = 00010000000b;//This lweapon was just reflected.
 const int LWF_IS_REFLECTED		   = 00100000000b;//This is a reflected lweapon.
 
 
@@ -221,4 +221,3 @@ const int LWD_4_FIRES_DIAG       = 10;//At death, this lweapon makes 4 diagonal 
 const int LWD_4_FIRES_RANDOM     = 11;//At death, this lweapon makes 4 random lweapons.
 const int LWD_8_FIRES            = 12;//At death, this lweapon makes 8 lweapons in all directions.
 const int LWD_FIRE               = 14;//At death, this lweapon makes another lweapon at its location.
-

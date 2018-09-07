@@ -158,7 +158,7 @@ void __DoLWeaponDeath4FiresRand(lweapon wpn)
 void __DoLWeaponDeath8Fires(lweapon wpn)
 {
     for(int i=0; i<270; i+=90)
-        FireLWeapon(LW_SCRIPT1, CenterX(wpn)-8, CenterY(wpn)-8, DegtoRad(i), 100, wpn->Damage/2, wpn->Misc[LW_ZH_I_ON_DEATH_ARG], 0, 0);
+        FireLWeapon(wpn->ID, CenterX(wpn)-8, CenterY(wpn)-8, DegtoRad(i), 100, wpn->Damage/2, wpn->Misc[LW_ZH_I_ON_DEATH_ARG], 0, 0);
 	for(int i=45; i<315; i+=90)
 		FireNonAngularLWeapon(wpn->ID, CenterX(wpn)-8, CenterY(wpn)-8, DegtoRad(i), 71, wpn->Damage/2, wpn->Misc[LW_ZH_I_ON_DEATH_ARG], 0, 0);
 	Game->PlaySound(SFX_FIRE);

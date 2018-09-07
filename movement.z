@@ -19,11 +19,10 @@ void SetLWeaponMovement(lweapon wpn, int type, int arg, int arg2)
     //wpn->Misc[LW_ZH_I_FLAGS]|=__LWFI_IS_LWZH_LWPN;
 	if(type!=LWM_FALL)wpn->Angular = true;
     if(type==LWM_THROW){
-        if(!IsSideview())
-		wpn->Misc[LW_ZH_I_WORK_2]=wpn->Z;
-	else
-		wpn->Misc[LW_ZH_I_WORK_2]= 176->wpn->Y;
-
+		if(!IsSideview())
+			wpn->Misc[LW_ZH_I_WORK_2]=wpn->Z;
+		else
+			wpn->Misc[LW_ZH_I_WORK_2]= 176-wpn->Y;
         // Necessary upward velocity to reach Link for thrown weapons
         if(arg<=0){
             if(Screen->NumNPCs()>0){
@@ -45,6 +44,23 @@ void SetLWeaponMovement(lweapon wpn, int type, int arg, int arg2)
     }
 	else if(type==LWM_CIRCLE)
 		wpn->Misc[LW_ZH_I_WORK]= RadtoDeg(wpn->Angle);
-		
-	
+	else if(type==LWM_BOUNCE){
+		int dir = AngleDir4(wpn->Angle);
+		if(dir==DIR_RIGHT){
+			if(wpn->Misc[LW_ZH_I_MOVEMENT_ARG]<=0)
+				wpn->Misc[LW_ZH_I_MOVEMENT_ARG]*=-1;	
+		}
+		else if(dir==DIR_LEFT){
+			if(wpn->Misc[LW_ZH_I_MOVEMENT_ARG]>=0)
+				wpn->Misc[LW_ZH_I_MOVEMENT_ARG]*=-1;
+		}
+		else if(dir==DIR_UP){
+			if(wpn->Misc[LW_ZH_I_MOVEMENT_ARG2]>=0)
+				wpn->Misc[LW_ZH_I_MOVEMENT_ARG2]*=-1;
+		}
+		else if(dir==DIR_DOWN){
+			if(wpn->Misc[LW_ZH_I_MOVEMENT_ARG2]<=0)
+				wpn->Misc[LW_ZH_I_MOVEMENT_ARG2]*=-1;
+		}
+	}
 }

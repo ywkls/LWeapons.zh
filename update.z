@@ -41,6 +41,7 @@ void __ReflectedFix1(){
 		}
     }
 }
+
 void __Carry_InputBlock(){
 	if(NumMoveLWeapons(LWM_CARRY)!=0){
 		lweapon wpn = FindLWeaponMove(LWM_CARRY);
@@ -73,7 +74,7 @@ void UpdateLWZH2(){
 }
 
 void __ReflectedFix2(lweapon wpn){
-	if(!GetLWeaponFlag2(wpn,LWF_NO_COLLISION))
+	if(!GetLWeaponFlag2(wpn,LWF_NO_COLLISION)){
 		if(wpn->ID== LW_REFMAGIC||
 			wpn->ID== LW_REFFIREBALL||
 			wpn->ID== LW_REFROCK||
@@ -86,7 +87,6 @@ void __ReflectedFix2(lweapon wpn){
 	}
 }
 
-
 //Updates fancy lweapon movement stuff.
 
 // Update a weapon's movement, lifespan, and death effects
@@ -96,37 +96,37 @@ void UpdateLWZH(lweapon wpn){
     if((wpn->Misc[LW_ZH_I_FLAGS]&__LWFI_DEAD )==0){
         // Start movement updates
         if(wpn->Misc[LW_ZH_I_MOVEMENT]!=0){
-            if(wpn->Misc[LW_ZH_I_MOVEMENT]!=0){
-				if(wpn->Misc[LW_ZH_I_MOVEMENT]==LWM_SINE_WAVE)
-					__UpdateLWMSineWave(wpn);
-				else if(wpn->Misc[LW_ZH_I_MOVEMENT]==LWM_HOMING)
-					__UpdateLWMHoming(wpn);
-				else if(wpn->Misc[LW_ZH_I_MOVEMENT]==LWM_THROW)
-                    __UpdateLWMThrow(wpn);
-                else if(wpn->Misc[LW_ZH_I_MOVEMENT]==LWM_FALL)
-                    __UpdateLWMFall(wpn);
-				else if(wpn->Misc[LW_ZH_I_MOVEMENT]==LWM_CIRCLE)
-					__UpdateLWM_Circle(wpn);
-				//else if(wpn->Misc[LW_ZH_I_MOVEMENT]==LWM_HOOKSHOT
-						  //&& (wpn->Misc[LW_ZH_I_FLAGS_2]&LWF_RETURN)==0
-						  //&& (wpn->Misc[LW_ZH_I_FLAGS_2]&LWF_HS_GRAB)==0)
-					//__UpdateLWM_Hookshot(wpn);
-				else if(wpn->Misc[LW_ZH_I_MOVEMENT]==LWM_BRANG)
-					__UpdateLWM_BRang(wpn);
-				else if(wpn->Misc[LW_ZH_I_MOVEMENT]==LWM_MELEE){
-					__UpdateLWM_Melee(wpn);
-				
-					//__UpdateLWE_Melee(wpn);
-				}
-				else if(wpn->Misc[LW_ZH_I_MOVEMENT]==LWM_CARRY)
-					__UpdateLWM_Carry(wpn);
-				else if(wpn->Misc[LW_ZH_I_MOVEMENT]==LWM_DUAL_FX)
-					__UpdateLWM_Dual(wpn);
-				else if(wpn->Misc[LW_ZH_I_MOVEMENT]==LWM_FULL_SCREEN)
-					__UpdateLWM_FullScreen(wpn);
-				else if(wpn->Misc[LW_ZH_I_MOVEMENT]==LWM_STRAFE)
-				__UpdateLWM_Strafe(wpn);	
+			if(wpn->Misc[LW_ZH_I_MOVEMENT]==LWM_SINE_WAVE)
+				__UpdateLWMSineWave(wpn);
+			else if(wpn->Misc[LW_ZH_I_MOVEMENT]==LWM_HOMING)
+				__UpdateLWMHoming(wpn);
+			else if(wpn->Misc[LW_ZH_I_MOVEMENT]==LWM_THROW)
+				__UpdateLWMThrow(wpn);
+			else if(wpn->Misc[LW_ZH_I_MOVEMENT]==LWM_FALL)
+				__UpdateLWMFall(wpn);
+			else if(wpn->Misc[LW_ZH_I_MOVEMENT]==LWM_CIRCLE)
+				__UpdateLWM_Circle(wpn);
+			//else if(wpn->Misc[LW_ZH_I_MOVEMENT]==LWM_HOOKSHOT
+					  //&& (wpn->Misc[LW_ZH_I_FLAGS_2]&LWF_RETURN)==0
+					  //&& (wpn->Misc[LW_ZH_I_FLAGS_2]&LWF_HS_GRAB)==0)
+				//__UpdateLWM_Hookshot(wpn);
+			else if(wpn->Misc[LW_ZH_I_MOVEMENT]==LWM_BRANG)
+				__UpdateLWM_BRang(wpn);
+			else if(wpn->Misc[LW_ZH_I_MOVEMENT]==LWM_MELEE){
+				__UpdateLWM_Melee(wpn);
+			
+				//__UpdateLWE_Melee(wpn);
 			}
+			else if(wpn->Misc[LW_ZH_I_MOVEMENT]==LWM_CARRY)
+				__UpdateLWM_Carry(wpn);
+			else if(wpn->Misc[LW_ZH_I_MOVEMENT]==LWM_DUAL_FX)
+				__UpdateLWM_Dual(wpn);
+			else if(wpn->Misc[LW_ZH_I_MOVEMENT]==LWM_FULL_SCREEN)
+				__UpdateLWM_FullScreen(wpn);
+			else if(wpn->Misc[LW_ZH_I_MOVEMENT]==LWM_STRAFE)
+				__UpdateLWM_Strafe(wpn);
+			else if(wpn->Misc[LW_ZH_I_MOVEMENT]==LWM_BOUNCE)
+				__Update_LWM_Bounce(wpn);
         } // End movement updates
         
         // Start lifespan updates
@@ -192,7 +192,7 @@ void UpdateLWZH(lweapon wpn){
 		if((wpn->Misc[LW_ZH_I_FLAGS_2]&LWF_KNOCKBACK_OFF)!=0)
 			__UpdateLWF_Knockback();
 		if(GetLWeaponFlag2(wpn,LWF_SHADOW))
-			__DrawLWeaponShadow(wpn);	
+			__DrawLWeaponShadow(wpn);
     }
 	
     // Start death effects
@@ -388,6 +388,62 @@ void __UpdateLWM_FullScreen(lweapon wpn){
 							0, 0, 0, true, wpn->Misc[LW_ZH_I_MOVEMENT_ARG2]);
 }
 
+//Makes FFC bounce off solid combos. Don`t call it too often. Otherwise Lweapon can be stuck in a wall.
+void __Update_LWM_Bounce (lweapon lw){
+	bool bounce = false;
+	int Sound = lw->Misc[LW_ZH_I_FX]*-1;
+	int lwx = lw->X + lw->HitXOffset;
+	int lwy = lw->Y + lw->HitYOffset;
+	if (Screen->isSolid(lwx+lw->HitWidth/2, lwy)) {
+		lw->Misc[LW_ZH_I_MOVEMENT_ARG2]*=-1;
+		bounce = true;
+	}
+	if (Screen->isSolid(lwx+lw->HitWidth/2, lwy+lw->HitHeight)) {
+		lw->Misc[LW_ZH_I_MOVEMENT_ARG2]*=-1;
+		bounce = true;
+	}
+	if (Screen->isSolid(lwx, lwy+lw->HitHeight/2)) {
+		lw->Misc[LW_ZH_I_MOVEMENT_ARG]*=-1;
+		bounce = true;
+	}
+	if (Screen->isSolid(lwx+lw->HitWidth, lwy+lw->HitHeight/2)) {
+		lw->Misc[LW_ZH_I_MOVEMENT_ARG]*=-1;
+		bounce = true;
+	}
+	if (Screen->isSolid(lwx, lwy)
+		&& lw->Misc[LW_ZH_I_MOVEMENT_ARG] < 0 
+		&& lw->Misc[LW_ZH_I_MOVEMENT_ARG2] <0){
+		lw->Misc[LW_ZH_I_MOVEMENT_ARG]*=-1;
+		lw->Misc[LW_ZH_I_MOVEMENT_ARG2]*=-1;
+		bounce = true;
+	}
+	if (Screen->isSolid(lwx, lwy+lw->HitHeight)
+		&& lw->Misc[LW_ZH_I_MOVEMENT_ARG] < 0
+		&& lw->Misc[LW_ZH_I_MOVEMENT_ARG2] > 0){
+		lw->Misc[LW_ZH_I_MOVEMENT_ARG]*=-1;
+		lw->Misc[LW_ZH_I_MOVEMENT_ARG2]*=-1;
+		bounce = true;
+	}
+	if (Screen->isSolid(lwx+lw->HitWidth, lwy+lw->HitHeight)
+		&& lw->Misc[LW_ZH_I_MOVEMENT_ARG] > 0 
+		&& lw->Misc[LW_ZH_I_MOVEMENT_ARG2] >0){
+		lw->Misc[LW_ZH_I_MOVEMENT_ARG]*=-1;
+		lw->Misc[LW_ZH_I_MOVEMENT_ARG2]*=-1;
+		bounce = true;
+	}
+	if (Screen->isSolid(lwx+lw->HitWidth, lwy)
+		&& lw->Misc[LW_ZH_I_MOVEMENT_ARG] > 0 
+		&& lw->Misc[LW_ZH_I_MOVEMENT_ARG2] <0){
+		lw->Misc[LW_ZH_I_MOVEMENT_ARG]*=-1;
+		lw->Misc[LW_ZH_I_MOVEMENT_ARG2]*=-1;
+		bounce = true;
+	}
+	if (bounce)
+		Game->PlaySound(Sound);
+	lw->X+=lw->Misc[LW_ZH_I_MOVEMENT_ARG];
+	lw->Y+=lw->Misc[LW_ZH_I_MOVEMENT_ARG2];
+}
+
 //Handles lweapon that's blocked by a combo.
 
 void __UpdateLWE_BlockFlags(lweapon wpn){
@@ -518,7 +574,7 @@ void __UpdateLWMHoming(lweapon wpn){
 		if(wpn->Misc[LW_ZH_I_WORK]==0)wpn->Misc[LW_ZH_I_WORK] = Rand(1,Screen->NumNPCs());
 		for(int i=Screen->NumNPCs();i>0;i--){
 			target_enemy = Screen->LoadNPC(i);
-			if(i=wpn->Misc[LW_ZH_I_WORK]
+			if(i==wpn->Misc[LW_ZH_I_WORK]
 				&& target_enemy->Type!=NPCT_GUY 
 				&& target_enemy->Type!=NPCT_FAIRY
 				&& target_enemy->Type!=NPCT_ROCK
@@ -576,11 +632,10 @@ void __UpdateLWMThrow(lweapon wpn)
     
     // Fall
     wpn->Misc[LW_ZH_I_WORK_2]=Max(wpn->Misc[LW_ZH_I_WORK_2]+wpn->Misc[LW_ZH_I_WORK], 0);
-    if(!IsSideview())
-	wpn->Z=wpn->Misc[LW_ZH_I_WORK_2];
+	if(!IsSideview())
+		wpn->Z=wpn->Misc[LW_ZH_I_WORK_2];
     else
-	wpn->Y = 176-wpn->Misc[LW_ZH_I_WORK_2];
-    
+		wpn->Y = 176-wpn->Misc[LW_ZH_I_WORK_2];
     if(wpn->Misc[LW_ZH_I_WORK_2]>0) // Z>0
         wpn->Misc[LW_ZH_I_WORK]=Max(wpn->Misc[LW_ZH_I_WORK]-GH_GRAVITY, -GH_TERMINAL_VELOCITY);
 	else{
@@ -747,7 +802,7 @@ void __NPCCollision(lweapon wpn){
 	for(int i=Screen->NumNPCs();i>0;i--){
 		npc n = Screen->LoadNPC(i);
 		if(wpn->Misc[LW_ZH_I_MOVEMENT]!=LWM_FULL_SCREEN){
-			if(Collision(wpn,n)){
+			if(WeaponCollision(wpn,n)){
 				if(n->Defense[LWDefense(wpn->ID)]==NPCDT_BLOCK)
 					__LWeaponClink(wpn,true);
 				else if(n->Defense[LWDefense(wpn->ID)]==NPCDT_STUNORBLOCK)
@@ -1112,7 +1167,8 @@ void __UpdateLWF_Stun(lweapon wpn){
 				|| thing->Defense[LWDefense(wpn->ID)]==NPCDT_STUNORIGNORE)){
 				if(thing->Defense[LWDefense(wpn->ID)]!=NPCDT_STUN){
 					int StunChance = Rand(0,100);
-					if(StunChance>50)thing->Stun= Rand(0,MAX_STUN_TIME);
+					if(StunChance>50)
+						thing->Stun= Rand(0,MAX_STUN_TIME);
 				}
 				else
 					thing->Stun = Rand(0,MAX_STUN_TIME);
@@ -1133,53 +1189,53 @@ void __UpdateLWF_Float(){
 
 //Handles lweapons that are reflected off of magic mirrors.
 
-void __UpdateLWF_Reflect(lweapon wpn){
-	float angle;
-	lweapon new;
-	if((wpn->Misc[LW_ZH_I_FLAGS_2]&LWF_WAS_REFLECTED)==0){
-		if(ComboTAtWpn(wpn,CT_MIRROR)||
-			ComboTAtWpn(wpn,CT_MIRRORBACKSLASH)||
-			ComboTAtWpn(wpn,CT_MIRRORSLASH)){
-		   if(ComboTAtWpn(wpn)==CT_MIRRORSLASH){
-				if(wpn->Dir==DIR_UP){
-					angle = DegtoRad(0);
-					wpn->Y-=16;
-				}
-				else if(wpn->Dir==DIR_DOWN){
-					angle = DegtoRad(180);
-					wpn->Y+=16;
-				}
-				else if(wpn->Dir==DIR_LEFT){
-					angle = DegtoRad(270);
-					wpn->X-=16;
-				}
-				else if(wpn->Dir==DIR_RIGHT){
-					angle = DegtoRad(90);
-					wpn->X+=16;
-				}
-		   }
-		   else if(ComboTAtWpn(wpn)==CT_MIRRORBACKSLASH){
-				if(wpn->Dir==DIR_UP){
-					angle = DegtoRad(180);
-					wpn->Y-=16;
-				}
-				else if(wpn->Dir==DIR_DOWN){
-					angle = DegtoRad(0);
-					wpn->Y+=16;
-				}
-				else if(wpn->Dir==DIR_LEFT){
-					angle = DegtoRad(90);
-					wpn->X-=16;
-				}
-				else if(wpn->Dir==DIR_RIGHT){
-					angle = DegtoRad(270);
-					wpn->X+=16;
-				}
-		   }
-		   wpn->X=WeaponXLoc(wpn);
-		   wpn->Y=WeaponYLoc(wpn);
-		   wpn->Angle = angle;
-		   SetLWeaponDir(wpn);
+///void __UpdateLWF_Reflect(lweapon wpn){
+	//float angle;
+	//lweapon new;
+	//if((wpn->Misc[LW_ZH_I_FLAGS_2]&LWF_WAS_REFLECTED)==0){
+		//if(ComboTAtWpn(wpn,CT_MIRROR)||
+			//ComboTAtWpn(wpn,CT_MIRRORBACKSLASH)||
+			//ComboTAtWpn(wpn,CT_MIRRORSLASH)){
+		   //if(ComboTAtWpn(wpn)==CT_MIRRORSLASH){
+				//if(wpn->Dir==DIR_UP){
+					//angle = DegtoRad(0);
+					//wpn->Y-=16;
+				//}
+				//else if(wpn->Dir==DIR_DOWN){
+					//angle = DegtoRad(180);
+					//wpn->Y+=16;
+				//}
+				//else if(wpn->Dir==DIR_LEFT){
+					//angle = DegtoRad(270);
+					//wpn->X-=16;
+				//}
+				//else if(wpn->Dir==DIR_RIGHT){
+					//angle = DegtoRad(90);
+					//wpn->X+=16;
+				//}
+		  // }
+		   //else if(ComboTAtWpn(wpn)==CT_MIRRORBACKSLASH){
+				//if(wpn->Dir==DIR_UP){
+					//angle = DegtoRad(180);
+					//wpn->Y-=16;
+				//}
+				//else if(wpn->Dir==DIR_DOWN){
+					//angle = DegtoRad(0);
+					//wpn->Y+=16;
+				//}
+				//else if(wpn->Dir==DIR_LEFT){
+					//angle = DegtoRad(90);
+					//wpn->X-=16;
+				//}
+				//else if(wpn->Dir==DIR_RIGHT){
+					//angle = DegtoRad(270);
+					//wpn->X+=16;
+				//}
+		   //}
+		   //wpn->X=WeaponXLoc(wpn);
+		   //wpn->Y=WeaponYLoc(wpn);
+		  // wpn->Angle = angle;
+		  // SetLWeaponDir(wpn);
 		   //if(wpn->TileHeight==0 && wpn->TileWidth==0)
 				//new = FireLWeapon(wpn->ID, wpn->X, wpn->Y, angle, wpn->Step, wpn->Damage, wpn->Misc[LW_ZH_I_LIFESPAN_ARG], wpn->Misc[LW_ZH_I_FX], wpn->Misc[LW_ZH_I_FLAGS]);
 			//else
@@ -1191,19 +1247,19 @@ void __UpdateLWF_Reflect(lweapon wpn){
 			//SetLWeaponDeathEffect(new, wpn->Misc[LW_ZH_I_ON_DEATH], wpn->Misc[LW_ZH_I_ON_DEATH_ARG]);
 			//new->Misc[LW_ZH_I_FLAGS_2]|=wpn->Misc[LW_ZH_I_FLAGS_2]|LWF_WAS_REFLECTED;			
 			//Remove(wpn);
-			wpn->Misc[LW_ZH_I_FLAGS_2]|=LWF_WAS_REFLECTED;			
-		}
-	}
-	else if((wpn->Misc[LW_ZH_I_FLAGS_2]&LWF_WAS_REFLECTED)!=0){
-		if(!ComboTAtWpn(wpn,CT_MIRROR)&&
-			!ComboTAtWpn(wpn,CT_MIRRORBACKSLASH)&&
-			!ComboTAtWpn(wpn,CT_MIRRORSLASH)){
-			wpn->Misc[LW_ZH_I_FLAGS_2]&=~LWF_WAS_REFLECTED;
-			if((wpn->Misc[LW_ZH_I_FLAGS_2]&LWF_IS_REFLECTED)==0)
-				wpn->Misc[LW_ZH_I_FLAGS_2]|=LWF_IS_REFLECTED;
-		}
-	}
-}
+			//wpn->Misc[LW_ZH_I_FLAGS_2]|=LWF_WAS_REFLECTED;			
+		//}
+	//}
+	//else if((wpn->Misc[LW_ZH_I_FLAGS_2]&LWF_WAS_REFLECTED)!=0){
+		//if(!ComboTAtWpn(wpn,CT_MIRROR)&&
+			//!ComboTAtWpn(wpn,CT_MIRRORBACKSLASH)&&
+			//!ComboTAtWpn(wpn,CT_MIRRORSLASH)){
+			//wpn->Misc[LW_ZH_I_FLAGS_2]&=~LWF_WAS_REFLECTED;
+			//if((wpn->Misc[LW_ZH_I_FLAGS_2]&LWF_IS_REFLECTED)==0)
+				//wpn->Misc[LW_ZH_I_FLAGS_2]|=LWF_IS_REFLECTED;
+		//}
+	//}
+//}
 
 //Makes lweapon ignore gravity
 
@@ -1267,7 +1323,7 @@ void __UpdateLWM_Melee(lweapon wpn){
 	}
 	if((wpn->Misc[LW_ZH_I_MOVEMENT_ARG2]&LWMF_SLASH)!=0){
 		int loc = ComboAt(wpn->X+8,wpn->Y+8);
-		DoDashSlash(loc);
+		DoDashSlash(loc,wpn->Misc[LW_ZH_I_MOVEMENT_ARG]);
 	}
 	if((wpn->Misc[LW_ZH_I_MOVEMENT_ARG2]&LWMF_POUND)!=0){
 		int loc = ComboAt(wpn->X+8,wpn->Y+8);

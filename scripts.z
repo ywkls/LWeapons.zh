@@ -67,7 +67,7 @@ item script OmniByrna{
 
 item script Grenade{
 	void run(int dummy, int Damage, int sprite){
-		if(Game->Counter[CR_BOMBS]>0){
+		if(Game->Counter[CR_BOMBS]>=1){
 			lweapon fireball;
 			fireball= FireLWeapon(LW_SCRIPT6, Link->X+8, Link->Y, __DirtoRad(Link->Dir), 
 									100, Damage, sprite, SFX_THROW, 0);
@@ -666,16 +666,16 @@ ffc script Bombchu_FFC{
 }
 
 item script Scripted_Shield{
-	void run(int dummy, int sprite, int sfx, int script_id, bool Button_A){
+	void run(int dummy, int sprite, int sfx, int script_id, int Button_A){
 		if(CountFFCsRunning(script_id)==0){
-			int args[8]= {sprite,sfx};
+			int args[8]= {sprite,sfx,Button_A};
 			NewFFCScript(script_id,args);
 		}		
 	}
 }
 
 ffc script Held_Shield{
-	void run(int sprite, int sfx, bool Button_A){
+	void run(int sprite, int sfx, int Button_A){
 		lweapon shield = FireLWeapon(LW_SCRIPT1,Link->X,Link->Y,__DirtoRad(Link->Dir),
 										0,0,sprite,sfx,LWF_PIERCES_ENEMIES);
 		SetLWeaponMovement(shield,LWM_STRAFE,Link->Dir,LWSF_ALL);
@@ -685,5 +685,17 @@ ffc script Held_Shield{
 				(Link->InputB && !Button_A))
 				Waitframe();
 		KillLWeapon(shield);
+	}
+}	
+
+item script Bouncy_Ball{
+	void run(int dummy, int sprite, int sfx, int VX, int VY){
+		if(NumLWeaponsOf(LW_SCRIPT1)==0){
+			lweapon ball = FireLWeapon(LW_SCRIPT1,Link->X,Link->Y,__DirtoRad(Link->Dir),
+											0,0,sprite,0,0);
+			SetLWeaponSFX(ball,sfx,0);
+			SetLWeaponMovement(ball,LWM_BOUNCE,VX,VY);
+			SetLWeaponDeathEffect(ball,LWD_VANISH,0);
+		}
 	}
 }

@@ -229,7 +229,7 @@ void SetLWeaponDir(lweapon wpn){
         angle+=6.2832;
     if(angle<0.3927 || angle>5.8905){
 		dir=DIR_RIGHT;
-		if(wpn->NumFrames!=0)tile = wpn->OriginalTile+wpn->NumFrames;
+		if(wpn->NumFrames!=0)tile = wpn->OriginalTile+(wpn->NumFrames*wpn->TileWidth);
 		else
 			tile = wpn->OriginalTile+wpn->TileWidth;
 	}
@@ -245,7 +245,13 @@ void SetLWeaponDir(lweapon wpn){
 			if(wpn->TileHeight==1)
 				flip = FLIP_V;
 			else tile = wpn->OriginalTile+1;
-		}	
+		}
+		else{
+			if(wpn->TileHeight==1)
+				flip = FLIP_V;
+			else
+				tile = wpn->OriginalTile+wpn->TileWidth;
+		}
 	}
     else if(angle<2.7489){
 		dir=DIR_LEFTDOWN;
@@ -255,7 +261,7 @@ void SetLWeaponDir(lweapon wpn){
 	}
     else if(angle<3.5343){
 		dir=DIR_LEFT;
-		if(wpn->NumFrames!=0)tile = wpn->OriginalTile+wpn->NumFrames;
+		if(wpn->NumFrames!=0)tile = wpn->OriginalTile+(wpn->NumFrames*wpn->TileWidth);
 		else
 			tile = wpn->OriginalTile+wpn->TileWidth;
 		if(wpn->TileWidth==1)

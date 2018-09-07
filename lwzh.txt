@@ -1,4 +1,4 @@
-//Lweapons.zh Version 1.3.5
+//Lweapons.zh Version 1.4.1
 
 +-------+
 | USAGE |
@@ -113,24 +113,11 @@ LW_ZH_I_FLAGS
  * LWF_SHADOW
  *  The lweapon casts a shadow.
  *
-//* LWF_WAS_REFLECTED
-//*  Signals that the lweapon is currently being reflected.
-//*  Used to keep it from happening every frame.
-//*  Not yet fully supported.
-//*
-//* LWF_IS_REFLECTED
-//*	This lweapon has been reflected off a magic mirror at some point.
-//*  Not yet fully supported.
-//*
-//* LWF_IS_MELEE             
-//*	This lweapon is a melee weapon.
-//*	Not yet supported.
-//*
-//*
-//* LWF_LINK_FROZEN         
-//*	While this lweapon is active, Link can't move.
-//*	Mostly used with hookshot lweapons.
-//*	Not yet supported.
+ * LWF_IS_REFLECTED
+ *  Signals that the lweapon is currently being reflected.
+ *  Used to keep it from happening every frame.
+ *  Does not yet support Magic Mirror interaction
+
 
 +----------+
 | MOVEMENT |
@@ -186,7 +173,7 @@ void SetLWeaponMovement(lweapon wpn, int type, int arg, int arg2)
  * LWM_MELEE             
  *		This weapon acts like a melee weapon.
  *		Most of these are not yet supported.
- *		arg:Not Used
+ *		arg: If LWMF_SLASH is set, what item set enemies drop.	
  *		arg2: Special effects of weapon.
  * 			LWMF_SLASH
  *				This LWeapon slashes bushes, grass and pots.
@@ -208,52 +195,38 @@ void SetLWeaponMovement(lweapon wpn, int type, int arg, int arg2)
  *		This lweapon is carried above Link's head.
  *		Not yet fully supported.
  *
- //*	LWM_FOLLOW
- //*		Follows the movement of another Lweapon.
- //*		arg: Lweapon type to follow.
-// *
- //*	LWM_REST
- //*		Stays in one location or doesn't move relative to Link.
- //*		arg:Types of resting lweapon
- //*			LW_R_GRENADE
- //*				A grenade held above Link's head.
- //*			
- //*			LW_R_SOMARIA
- //*				A block produced by the Cane of Somaria.
- //*
- //*			LW_R_MAGNET
- //*				Acts like magnetic gloves.
- //*
- //* LWM_HOOKSHOT         
- //*		This lweapon moves like a hookshot.
- //*		Not yet supported.
- //*		arg; Length of the chain, in tiles.
- //*		arg2: Sprite of the chain.
- //*
- //* LWM_MELEE             
- //*		This weapon acts like a melee weapon.
- //*		Most of these are not yet supported.
- //*		arg:Type of melee weapon
- //*			LW_IS_SWORD
- //*				Acts like a sword
- //*			
- //*			LW_IS_HAMMER
- //*				Acts like a hammer.
- //*
- //*			LW_IS_WAND
- //*				Acts like a wand.
- //*		arg2:Misc weapon changes. OR these together or use zero for none.
- //*			LW_HAS_SLASH
- //*				Used to make sword slash.
- //*
- //*			LW_HAS_PERIL
- //*				Used to shoot peril beasm
- //*
- //*			LW_HAS_WHIM_RING
- //*				You have the whimsical ring
- //*
- //*			LW_HAS_BOOK
- //*				You have the magic book.
+ * LWM_BOUNCE
+ *		This lweapon bounces off of solid objects.
+ *		Velocity is auto-adjusted to correspond to the direction you're facing.
+ *		arg: X velocity
+ *		arg2:Y velocity
+ *
+ * LWM_STRAFE
+ *		This lweapon forces Link to face a certain direction while active.
+ *		Primarily used to make scripted shields.
+ *		arg: Direction Link faces.
+ *		arg2: Flags for EWeapons this blocks.
+ *			These can be or'd together.
+ *			LWSF_FIREBALL
+ *				Blocks fireballs.
+ *
+ *  		LWSF_BEAM	 
+ *				Blocks sword beams.
+ *
+ *			LWSF_ARROW 	 
+ *				Blocks arrows.
+ *
+ *			LWSF_ROCK 	 
+ *				Blocks rocks.
+ *
+ * 			LWSF_MAGIC 	 
+ *				Blocks magic.
+ *
+ *          LWSF_BRANG	 
+ *				Blocks boomerangs.
+ *
+ * 			LWSF_ALL	 
+ *				Blocks all eweapons.
   
 +----------+
 | LIFESPAN |

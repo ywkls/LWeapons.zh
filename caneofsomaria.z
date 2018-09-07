@@ -1,8 +1,14 @@
-const int SOMARIA_SCRIPT = 11;
-const int PRESSURE_PLATE_SCRIPT = 12;
-const int SOMARIA_COMBO = 28325;
-const int SPR_SOMARIA = 109;
-const int SFX_PUSH_SOMARIA = 88;
+const int SOMARIA_SCRIPT = 11;//Script slot for Cane of Somaria
+const int PRESSURE_PLATE_SCRIPT = 12;//Script slot for pushing switches with Somaria block
+const int SOMARIA_COMBO = 28325;//Combo used by Somaria block
+const int SPR_SOMARIA = 109;//Sprite of Somaria cane
+const int SFX_PUSH_SOMARIA = 88;//Sound to make when pushing Somaria block
+
+//D0- Left blank so other scripts can use item
+//D1- Damage done by Somaria beams
+//D2- Sprite of Somaria beams
+//D3- Sound made by Somaria beams
+//D4- If this is using the A button or not.
 
 item script Somaria_Cane{
 	void run(int dummy, int damage, int spr, int sfx, int Button_A){
@@ -17,6 +23,11 @@ item script Somaria_Cane{
 		}
 	}
 }
+
+//Switches that can be pressed by Somaria block
+//Must be type Script 1 and flag 66
+//Secrets are triggered by placing flag Script 5
+//All secret combos must have desired result be the next combo
 
 ffc script Somaria_Block{
 	void run(int damage, int spr, int sfx, int Button_A){
