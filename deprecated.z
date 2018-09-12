@@ -249,6 +249,8 @@ bool WeaponCollision(lweapon a, npc b) {
   int bx = b->X + b->HitXOffset+1;
   int ay = a->Y + a->HitYOffset+1;
   int by = b->Y + b->HitYOffset+1;
+  if(!b->CollDetection || !a->CollDetection)
+	return false;
   return RectCollision(ax, ay, ax+a->HitWidth-1, ay+a->HitHeight-1, 
 						bx, by, bx+b->HitWidth-1, by+b->HitHeight-1)
 						&& (a->Z + a->HitZHeight >= b->Z) && (a->Z <= b->Z + b->HitZHeight);
@@ -260,6 +262,8 @@ bool WeaponCollision(npc b, lweapon a) {
   int bx = b->X + b->HitXOffset+1;
   int ay = a->Y + a->HitYOffset+1;
   int by = b->Y + b->HitYOffset+1;
+  if(!b->CollDetection || !a->CollDetection)
+	return false;
   return RectCollision(ax, ay, ax+a->HitWidth-1, ay+a->HitHeight-1, 
 						bx, by, bx+b->HitWidth-1, by+b->HitHeight-1)
 						&& (a->Z + a->HitZHeight >= b->Z) && (a->Z <= b->Z + b->HitZHeight);
@@ -271,6 +275,8 @@ bool WeaponCollision(lweapon a, eweapon b) {
   int bx = b->X + b->HitXOffset+1;
   int ay = a->Y + a->HitYOffset+1;
   int by = b->Y + b->HitYOffset+1;
+  if(!b->CollDetection || !a->CollDetection)
+	return false;
   return RectCollision(ax, ay, ax+a->HitWidth-1, ay+a->HitHeight-1, 
 						bx, by, bx+b->HitWidth-1, by+b->HitHeight-1)
 						&& (a->Z + a->HitZHeight >= b->Z) && (a->Z <= b->Z + b->HitZHeight);
@@ -282,6 +288,8 @@ bool WeaponCollision(eweapon b, lweapon a) {
   int bx = b->X + b->HitXOffset+1;
   int ay = a->Y + a->HitYOffset+1;
   int by = b->Y + b->HitYOffset+1;
+  if(!b->CollDetection || !a->CollDetection)
+	return false;
   return RectCollision(ax, ay, ax+a->HitWidth-1, ay+a->HitHeight-1, 
 						bx, by, bx+b->HitWidth-1, by+b->HitHeight-1)
 						&& (a->Z + a->HitZHeight >= b->Z) && (a->Z <= b->Z + b->HitZHeight);
@@ -293,6 +301,8 @@ bool WeaponCollision(eweapon b, ffc a) {
   int bx = b->X + b->HitXOffset+1;
   int ay = a->Y+1;
   int by = b->Y + b->HitYOffset+1;
+  if(!b->CollDetection)
+	return false;
   return RectCollision(ax, ay, ax+a->EffectWidth-1, ay+a->EffectHeight-1, 
 						bx, by, bx+b->HitWidth-1, by+b->HitHeight-1);
 }
@@ -303,6 +313,8 @@ bool WeaponCollision(ffc a, eweapon b) {
   int bx = b->X + b->HitXOffset+1;
   int ay = a->Y+1;
   int by = b->Y + b->HitYOffset+1;
+  if(!b->CollDetection)
+	return false;
   return RectCollision(ax, ay, ax+a->EffectWidth-1, ay+a->EffectHeight-1, 
 						bx, by, bx+b->HitWidth-1, by+b->HitHeight-1);
 }
@@ -313,6 +325,8 @@ bool WeaponCollision(lweapon b, ffc a) {
   int bx = b->X + b->HitXOffset+1;
   int ay = a->Y+1;
   int by = b->Y + b->HitYOffset+1;
+  if(!b->CollDetection)
+	return false;
   return RectCollision(ax, ay, ax+a->EffectWidth-1, ay+a->EffectHeight-1, 
 						bx, by, bx+b->HitWidth-1, by+b->HitHeight-1);
 }
@@ -323,6 +337,8 @@ bool WeaponCollision(ffc a, lweapon b) {
   int bx = b->X + b->HitXOffset+1;
   int ay = a->Y+1;
   int by = b->Y + b->HitYOffset+1;
+  if(!b->CollDetection)
+	return false;
   return RectCollision(ax, ay, ax+a->EffectWidth-1, ay+a->EffectHeight-1, 
 						bx, by, bx+b->HitWidth-1, by+b->HitHeight-1);
 }

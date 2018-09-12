@@ -810,6 +810,8 @@ void __NPCCollision(lweapon wpn){
 				else if(n->Defense[LWDefense(wpn->ID)]==NPCDT_IGNORE)
 					SetLWeaponFlag2(wpn,LWF_TEMP_PIERCE);
 				if(!GetLWeaponFlag2(wpn,LWF_TEMP_PIERCE)){
+					if(n->Defense[LWDefense(wpn->ID)]==NPCDT_ONEHITKILL)
+						__KillNPC(n);
 					if(wpn->Misc[LW_ZH_I_MOVEMENT]==LWM_BRANG ||
 					   wpn->Misc[LW_ZH_I_MOVEMENT]==LWM_HOOKSHOT)
 						wpn->Misc[LW_ZH_I_FLAGS_2]|=LWF_RETURN;
@@ -833,6 +835,10 @@ void __NPCCollision(lweapon wpn){
 			n->Misc[GEN_MISC_FLAGS]|=NPC_F_FULL_SCREEN;
 		}
 	}
+}
+
+void __KillNPC(npc enemy){
+	enemy->HP = 0;
 }
 
 //void __NPCCollision(lweapon wpn){
