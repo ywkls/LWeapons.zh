@@ -1327,6 +1327,23 @@ void __UpdateLWM_Melee(lweapon wpn){
 		wpn->DrawXOffset=0;
 		wpn->DrawYOffset=0;
 	}
+	if (Link->Dir == DIR_UP){
+	   wpn->X = Link->X;
+	   wpn->Y = Link->Y - 12;
+	}
+	if (Link->Dir == DIR_DOWN){
+	   wpn->X = Link->X;
+	   wpn->Y = Link->Y + 12;
+	}
+	if (Link->Dir == DIR_LEFT){
+	   wpn->X = Link->X-12;
+	   wpn->Y = Link->Y;
+	}
+	if (Link->Dir == DIR_RIGHT){
+	   wpn->X = Link->X+12;
+	   wpn->Y = Link->Y;
+	}
+	__Melee_LWeaponDir(wpn);
 	if((wpn->Misc[LW_ZH_I_MOVEMENT_ARG2]&LWMF_SLASH)!=0){
 		int loc = ComboAt(wpn->X+8,wpn->Y+8);
 		DoDashSlash(loc,wpn->Misc[LW_ZH_I_MOVEMENT_ARG]);
@@ -1338,6 +1355,72 @@ void __UpdateLWM_Melee(lweapon wpn){
 	}
 	if((wpn->Misc[LW_ZH_I_MOVEMENT_ARG2]&LWMF_REFLECTS_EWPN)!=0)
 		__UpdateLWMF_Reflect_EWpn(wpn);
+}
+
+void __Melee_LWeaponDir(lweapon wpn){
+    float angle=__DirtoRad(Link->Dir);
+    int dir;
+	int tile = wpn->OriginalTile;
+	int flip= wpn->Flip;
+    
+    if(angle<0)
+        angle+=6.2832;
+    if(angle<0.3927 || angle>5.8905){
+		dir=DIR_RIGHT;
+		if(wpn->NumFrames!=0)tile = wpn->OriginalTile+(wpn->NumFrames*wpn->TileWidth);
+		else
+			tile = wpn->OriginalTile+wpn->TileWidth;
+	}
+    else if(angle<1.1781){
+		dir=DIR_RIGHTDOWN;
+		if(wpn->NumFrames!=0)tile = wpn->OriginalTile+(wpn->NumFrames*2);
+		else tile = wpn->OriginalTile+2;
+		flip = FLIP_V;
+	} 
+    else if(angle<1.9635){
+		dir=DIR_DOWN;
+		if(wpn->TileWidth==1){
+			if(wpn->TileHeight==1)
+				flip = FLIP_V;
+			else tile = wpn->OriginalTile+1;
+		}
+		else{
+			if(wpn->TileHeight==1)
+				flip = FLIP_V;
+			else
+				tile = wpn->OriginalTile+wpn->TileWidth;
+		}
+	}
+    else if(angle<2.7489){
+		dir=DIR_LEFTDOWN;
+		if(wpn->NumFrames!=0)tile = wpn->OriginalTile+(wpn->NumFrames*2);
+		else tile = wpn->OriginalTile+2;
+		flip = FLIP_B;
+	}
+    else if(angle<3.5343){
+		dir=DIR_LEFT;
+		if(wpn->NumFrames!=0)tile = wpn->OriginalTile+(wpn->NumFrames*wpn->TileWidth);
+		else
+			tile = wpn->OriginalTile+wpn->TileWidth;
+		if(wpn->TileWidth==1)
+			flip= FLIP_H;
+	}
+    else if(angle<4.3197){
+		dir=DIR_LEFTUP;
+		if(wpn->NumFrames!=0)tile = wpn->OriginalTile+(wpn->NumFrames*2);
+		else tile = wpn->OriginalTile+2;
+		flip = FLIP_H;
+	}
+    else if(angle<5.1051)
+        dir=DIR_UP;
+    else{
+		dir=DIR_RIGHTUP;
+		if(wpn->NumFrames!=0)tile = wpn->OriginalTile+(wpn->NumFrames*2);
+		else tile = wpn->OriginalTile+2;
+	} 	
+    wpn->Dir=dir;
+	wpn->Tile = tile;
+	wpn->Flip =flip;
 }
 
 void __FlagTrigger(lweapon wpn){
