@@ -1327,23 +1327,25 @@ void __UpdateLWM_Melee(lweapon wpn){
 		wpn->DrawXOffset=0;
 		wpn->DrawYOffset=0;
 	}
-	if (Link->Dir == DIR_UP){
-	   wpn->X = Link->X;
-	   wpn->Y = Link->Y - 12;
+	if((wpn->Misc[LW_ZH_I_MOVEMENT_ARG2]&LWMF_TRACKER)!=0){
+		if (Link->Dir == DIR_UP){
+		   wpn->X = Link->X;
+		   wpn->Y = Link->Y - 12;
+		}
+		if (Link->Dir == DIR_DOWN){
+		   wpn->X = Link->X;
+		   wpn->Y = Link->Y + 12;
+		}
+		if (Link->Dir == DIR_LEFT){
+		   wpn->X = Link->X-12;
+		   wpn->Y = Link->Y;
+		}
+		if (Link->Dir == DIR_RIGHT){
+		   wpn->X = Link->X+12;
+		   wpn->Y = Link->Y;
+		}
+		__Melee_LWeaponDir(wpn);
 	}
-	if (Link->Dir == DIR_DOWN){
-	   wpn->X = Link->X;
-	   wpn->Y = Link->Y + 12;
-	}
-	if (Link->Dir == DIR_LEFT){
-	   wpn->X = Link->X-12;
-	   wpn->Y = Link->Y;
-	}
-	if (Link->Dir == DIR_RIGHT){
-	   wpn->X = Link->X+12;
-	   wpn->Y = Link->Y;
-	}
-	__Melee_LWeaponDir(wpn);
 	if((wpn->Misc[LW_ZH_I_MOVEMENT_ARG2]&LWMF_SLASH)!=0){
 		int loc = ComboAt(wpn->X+8,wpn->Y+8);
 		DoDashSlash(loc,wpn->Misc[LW_ZH_I_MOVEMENT_ARG]);

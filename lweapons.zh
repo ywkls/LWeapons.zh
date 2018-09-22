@@ -1,4 +1,4 @@
-//LWeapons.zh Version 1.4.5
+//LWeapons.zh Version 1.4.6
 
 //
 //Library for doing custom LWeapon movement, death effects, sounds and lifespans. With or without FFCS.
@@ -150,6 +150,7 @@ const int LWMF_REST					= 00000000010b;//This weapon rests when it stops moving.
 const int LWMF_BOUNCE 				= 00000000100b;//This weapon bounces when it hits the ground.
 const int LWMF_SLASH 				= 00000001000b;//This weapon slashs bushs, flowers and other combos.
 const int LWMF_POUND 				= 00000010000b;//This weapon pounds hammer pegs.
+const int LWMF_TRACKER				= 00000100000b;//This weapon moves and changes appearance as you do.
 const int LWMF_REFLECTS_EWPN		= 00010000000b;//This lweapon reflects Eweapons.
 
 //Shield flags for strafing Lweapons
