@@ -620,7 +620,6 @@ void __UpdateLWMThrow(lweapon wpn)
     // LW_ZH_I_WORK: Current jump
     // LW_ZH_I_WORK_2: Current Z position
     // LW_ZH_I_MOVEMENT_ARG: Initial jump
-    
     wpn->Jump=0; // Override engine handling of Z movement
     
     // Just thrown
@@ -636,21 +635,25 @@ void __UpdateLWMThrow(lweapon wpn)
 		wpn->Z=wpn->Misc[LW_ZH_I_WORK_2];
     else
 		wpn->Y = 176-wpn->Misc[LW_ZH_I_WORK_2];
-    if(wpn->Misc[LW_ZH_I_WORK_2]>0) // Z>0
-        wpn->Misc[LW_ZH_I_WORK]=Max(wpn->Misc[LW_ZH_I_WORK]-GH_GRAVITY, -GH_TERMINAL_VELOCITY);
+	if(wpn->Misc[LW_ZH_I_WORK_2]>0 &&
+		!OnSidePlatform(wpn->X, wpn->Y, 
+							wpn->HitXOffset,
+							wpn->HitYOffset, 
+							wpn->HitHeight)) // Z>0
+			wpn->Misc[LW_ZH_I_WORK]=Max(wpn->Misc[LW_ZH_I_WORK]-GH_GRAVITY, -GH_TERMINAL_VELOCITY);
 	else{
 		bool done=false;
         
         // Bounce
         if((wpn->Misc[LW_ZH_I_MOVEMENT_ARG2]&LWMF_BOUNCE)!=0){
-            // Falling fast enough?
-            if(wpn->Misc[LW_ZH_I_WORK]<-0.5){ // Jump<=-0.5
-                wpn->Misc[LW_ZH_I_WORK]*=-0.5;
-                wpn->Step*=0.75;
-            }
-            // Not fast enough
-            else
-                done=true;
+			// Falling fast enough?
+			if(wpn->Misc[LW_ZH_I_WORK]<-0.5){ // Jump<=-0.5
+				wpn->Misc[LW_ZH_I_WORK]*=-0.5;
+				wpn->Step*=0.75;
+			}
+			// Not fast enough
+			else
+				done=true;
         }
         // Don't bounce
         else
@@ -674,27 +677,35 @@ void __UpdateLWMThrow(lweapon wpn)
 
 void __UpdateLWMFall(lweapon wpn)
 {
-    wpn->Jump=0; // Override engine handling of Z movement
+	wpn->Jump=0; // Override engine handling of Z movement
     wpn->Misc[LW_ZH_I_WORK_2]-=wpn->Misc[LW_ZH_I_WORK];
-    wpn->Z=wpn->Misc[LW_ZH_I_WORK_2];
+    if(!IsSideview())
+		wpn->Z=wpn->Misc[LW_ZH_I_WORK_2];
+    else
+		wpn->Y = 176-wpn->Misc[LW_ZH_I_WORK_2];
     wpn->Misc[LW_ZH_I_WORK]=Min(wpn->Misc[LW_ZH_I_WORK]+GH_GRAVITY, GH_TERMINAL_VELOCITY);
 	// Hit the ground
     // Still in the air; adjust velocity
-    if(wpn->Misc[LW_ZH_I_WORK_2]>0) // Z>0
-        wpn->Misc[LW_ZH_I_WORK]=Max(wpn->Misc[LW_ZH_I_WORK]-GH_GRAVITY, -GH_TERMINAL_VELOCITY);
+
+    if(wpn->Misc[LW_ZH_I_WORK_2]>0
+		&& !OnSidePlatform(wpn->X, wpn->Y, 
+							wpn->HitXOffset,
+							wpn->HitYOffset, 
+							wpn->HitHeight))// Z>0
+			wpn->Misc[LW_ZH_I_WORK]=Max(wpn->Misc[LW_ZH_I_WORK]-GH_GRAVITY, -GH_TERMINAL_VELOCITY);
 	else{
 		bool done=false;
         
         // Bounce
         if((wpn->Misc[LW_ZH_I_MOVEMENT_ARG2]&LWMF_BOUNCE)!=0){
-            // Falling fast enough?
-            if(wpn->Misc[LW_ZH_I_WORK]<-0.5){ // Jump<=-0.5
-                wpn->Misc[LW_ZH_I_WORK]*=-0.5;
-                wpn->Step*=0.75;
-            }
-            // Not fast enough
-            else
-                done=true;
+           // Falling fast enough?
+			if(wpn->Misc[LW_ZH_I_WORK]<-0.5){ // Jump<=-0.5
+				wpn->Misc[LW_ZH_I_WORK]*=-0.5;
+				wpn->Step*=0.75;
+			}
+			// Not fast enough
+			else
+				done=true;
         }
         // Don't bounce
         else

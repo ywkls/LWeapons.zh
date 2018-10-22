@@ -100,10 +100,7 @@ int LWBlockType(int wpn_id,lweapon wpn){
 
 int CenterWpnX(lweapon wpn){
 	int x = wpn->X+wpn->HitXOffset;
-	if(wpn->HitWidth>16)
-		x+=(wpn->HitWidth/2);
-	else
-		x+=8;
+	x+=(wpn->HitWidth/2);
 	return x;
 }
 
@@ -111,10 +108,7 @@ int CenterWpnX(lweapon wpn){
 
 int CenterWpnY(lweapon wpn){
 	int y = wpn->Y+wpn->HitYOffset;
-	if(wpn->HitHeight>16)
-		y+=(wpn->HitHeight/2);
-	else
-		y+=8;
+	y+=(wpn->HitHeight/2);
 	return y;
 }
 
