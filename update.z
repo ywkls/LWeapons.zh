@@ -681,8 +681,10 @@ void __UpdateLWMFall(lweapon wpn)
     wpn->Misc[LW_ZH_I_WORK_2]-=wpn->Misc[LW_ZH_I_WORK];
     if(!IsSideview())
 		wpn->Z=wpn->Misc[LW_ZH_I_WORK_2];
-    else
-		wpn->Y = 176-wpn->Misc[LW_ZH_I_WORK_2];
+    else{
+		wpn->DrawYOffset=wpn->Misc[LW_ZH_I_WORK_2];
+		wpn->HitYOffset =wpn->Misc[LW_ZH_I_WORK_2];
+	}
     wpn->Misc[LW_ZH_I_WORK]=Min(wpn->Misc[LW_ZH_I_WORK]+GH_GRAVITY, GH_TERMINAL_VELOCITY);
 	// Hit the ground
     // Still in the air; adjust velocity
