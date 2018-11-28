@@ -125,8 +125,8 @@ void UpdateLWZH(lweapon wpn){
 				__UpdateLWM_FullScreen(wpn);
 			else if(wpn->Misc[LW_ZH_I_MOVEMENT]==LWM_STRAFE)
 				__UpdateLWM_Strafe(wpn);
-			else if(wpn->Misc[LW_ZH_I_MOVEMENT]==LWM_BOUNCE)
-				__Update_LWM_Bounce(wpn);
+			else if(wpn->Misc[LW_ZH_I_MOVEMENT]==LWM_CAROM)
+				__Update_LWM_Carom(wpn);
         } // End movement updates
         
         // Start lifespan updates
@@ -389,7 +389,7 @@ void __UpdateLWM_FullScreen(lweapon wpn){
 }
 
 //Makes FFC bounce off solid combos. Don`t call it too often. Otherwise Lweapon can be stuck in a wall.
-void __Update_LWM_Bounce (lweapon lw){
+void __Update_LWM_Carom(lweapon lw){
 	bool bounce = false;
 	int Sound = lw->Misc[LW_ZH_I_FX]*-1;
 	int lwx = lw->X + lw->HitXOffset;
@@ -1357,6 +1357,7 @@ void __UpdateLWM_Melee(lweapon wpn){
 		   wpn->X = Link->X+12;
 		   wpn->Y = Link->Y;
 		}
+		wpn->Z = Link->Z;
 		__Melee_LWeaponDir(wpn);
 	}
 	if((wpn->Misc[LW_ZH_I_MOVEMENT_ARG2]&LWMF_SLASH)!=0){

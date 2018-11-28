@@ -133,7 +133,8 @@ const int LWM_BRANG             = 5;//LWeapon that acts like a boomerang.
 const int LWM_FULL_SCREEN		= 9;//LWeapon that covers the screen.
 const int LWM_STRAFE 			= 10;//LWeapon that causes strafing movement.
 const int LWM_THROW             = 15;//Lweapon that is thrown.
-const int LWM_BOUNCE			= 16;//LWeapon that bounces off walls.
+const int LWM_BOUNCE			= 16;//LWeapon that bounces on the floor.
+const int LWM_CAROM				= 17;//LWeapon that bounces off walls.
 const int LWM_FALL              = 19;//Lweapon that falls from the air.
 
 //Not fully supported movement types.
