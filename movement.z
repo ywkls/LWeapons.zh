@@ -75,3 +75,7 @@ void SetLWeaponMovement(lweapon wpn, int type, int arg, int arg2)
 		}
 	}
 }
+
+void SetLWeaponMovementStyle(lweapon wpn, int style){
+	wpn->Misc[LW_ZH_I_WORK_3]= style;
+}

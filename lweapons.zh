@@ -154,6 +154,12 @@ const int LWMF_POUND 				= 00000010000b;//This weapon pounds hammer pegs.
 const int LWMF_TRACKER				= 00000100000b;//This weapon moves and changes appearance as you do.
 const int LWMF_REFLECTS_EWPN		= 00010000000b;//This lweapon reflects Eweapons.
 
+//Movement styles for Melee Lweapons
+
+const int LWMS_STAB        = 1;//This lweapon stabs in and out.
+const int LWMS_SLASH	   = 2;//This lweapon moves does a slash
+const int LWMS_HAMMER      = 3;//This lweapon moves like a hammer.
+
 //Shield flags for strafing Lweapons
 
 const int LWSF_FIREBALL				= 00000000001b;//Blocks fireballs.

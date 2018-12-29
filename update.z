@@ -338,19 +338,16 @@ lweapon FireReflectedLWeapon(eweapon EWpn){
     wpn->Angular=true;
 	wpn->Dir = OppositeDir(EWpn->Dir);
 	wpn->Angle= __DirtoRad(wpn->Dir);
-    __CopySprite(wpn,EWpn);
+    __CopySprite(wpn,EWpn,true);
     wpn->Misc[LW_ZH_I_FLAGS]|=__LWFI_IS_LWZH_LWPN;
     return wpn;
 }
 
 
 
-void __CopySprite(lweapon b, eweapon a){
+void __CopySprite(lweapon b, eweapon a,bool Flipped){
 	b->Z = a->Z;
 	b->Jump = a->Jump;
-	b->Extend = a->Extend;
-	b->TileWidth = a->TileWidth;
-	b->TileHeight = a->TileHeight;
 	b->HitWidth = a->HitWidth;
 	b->HitHeight = a->HitHeight;
 	b->HitZHeight = a->HitZHeight;
@@ -368,6 +365,15 @@ void __CopySprite(lweapon b, eweapon a){
 	b->NumFrames = a->NumFrames;
 	b->Frame = a->Frame;
 	b->ASpeed = a->ASpeed;
+	if(Flipped){
+		if(a->Dir==DIR_LEFT
+			||a->Dir==DIR_RIGHT)
+			b->Flip = FLIP_H;
+		else
+			b->Flip = FLIP_V;
+	}
+	else
+		b->Flip = a->Flip;
 	Remove(a);
 }
 
@@ -1335,10 +1341,16 @@ void __UpdateLWM_Melee(lweapon wpn){
 		}
 	}
 	else{
-		wpn->HitXOffset =0;
-		wpn->HitYOffset =0;
-		wpn->DrawXOffset=0;
-		wpn->DrawYOffset=0;
+		if(wpn->Misc[LW_ZH_I_WORK_3]==0){
+			wpn->HitXOffset =0;
+			wpn->HitYOffset =0;
+			wpn->DrawXOffset=0;
+			wpn->DrawYOffset=0;
+		}
+		else{
+			if(wpn->Misc[LW_ZH_I_WORK_3]==LWMS_SLASH)
+				__UpdateLW_MS_Slash(wpn);
+		}
 	}
 	if((wpn->Misc[LW_ZH_I_MOVEMENT_ARG2]&LWMF_TRACKER)!=0){
 		if (Link->Dir == DIR_UP){
@@ -1361,11 +1373,11 @@ void __UpdateLWM_Melee(lweapon wpn){
 		__Melee_LWeaponDir(wpn);
 	}
 	if((wpn->Misc[LW_ZH_I_MOVEMENT_ARG2]&LWMF_SLASH)!=0){
-		int loc = ComboAt(wpn->X+8,wpn->Y+8);
+		int loc = ComboAt(wpn->X+8+wpn->HitXOffset,wpn->Y+8+wpn->HitYOffset);
 		DoDashSlash(loc,wpn->Misc[LW_ZH_I_MOVEMENT_ARG]);
 	}
 	if((wpn->Misc[LW_ZH_I_MOVEMENT_ARG2]&LWMF_POUND)!=0){
-		int loc = ComboAt(wpn->X+8,wpn->Y+8);
+		int loc = ComboAt(wpn->X+8+wpn->HitXOffset,wpn->Y+8+wpn->HitYOffset);
 		if(ComboT(loc,CT_POUND))
 			Screen->ComboD[loc]++;
 	}
@@ -1437,6 +1449,65 @@ void __Melee_LWeaponDir(lweapon wpn){
     wpn->Dir=dir;
 	wpn->Tile = tile;
 	wpn->Flip =flip;
+}
+
+//Handles Lweapons that circle Link.
+
+void __UpdateLW_MS_Slash(lweapon wpn){
+	
+	wpn->Misc[LW_ZH_I_WORK]= (wpn->Misc[LW_ZH_I_WORK]
+								+((wpn->Step/100)*wpn->Misc[LW_ZH_I_MOVEMENT_ARG2]))%360;
+	wpn->HitXOffset = VectorX(8,wpn->Misc[LW_ZH_I_WORK]);
+	wpn->HitYOffset = VectorY(8,wpn->Misc[LW_ZH_I_WORK]);
+	
+	wpn->Angle = DegtoRad(wpn->Misc[LW_ZH_I_WORK]);
+	DrawLWeapon(wpn);
+	wpn->X=Link->X;
+	wpn->Y=Link->Y;							
+	wpn->DrawXOffset= wpn->HitXOffset;
+	wpn->DrawYOffset= wpn->HitYOffset;
+}
+
+// Used when Link is holding up an item. UpdateEWeapon() doesn't run, but
+// the appearance-related flags still need handled.
+void DrawLWeapon(lweapon wpn){
+	float angle;
+	
+	if(wpn->Angular)
+		angle=RadtoDeg(wpn->Angle);
+	else{
+		int dir=__NormalizeDir(wpn->Dir);
+		
+		if(dir==DIR_UP)
+			angle=-90;
+		else if(dir==DIR_RIGHTUP)
+			angle=-45;
+		else if(dir==DIR_RIGHT)
+			angle=0;
+		else if(dir==DIR_RIGHTDOWN)
+			angle=45;
+		else if(dir==DIR_DOWN)
+			angle=90;
+		else if(dir==DIR_LEFTDOWN)
+			angle=135;
+		else if(dir==DIR_LEFT)
+			angle=180;
+		else // DIR_LEFTUP
+			angle=-135;
+	}
+        
+	int flip;
+	if(angle>=0 && angle<180)
+		flip=0;
+	else
+		flip=2;
+	
+	// Currently, these are always drawn on layer 4.
+	// That should probably be changed...
+	Screen->DrawTile(4, wpn->X+wpn->DrawXOffset, wpn->Y-wpn->Z+wpn->DrawYOffset, 
+						wpn->Tile, 1, 1, wpn->CSet,
+						-1, -1, wpn->X+wpn->DrawXOffset, 
+						wpn->Y-wpn->Z+wpn->DrawYOffset, angle, flip, true, OP_OPAQUE);
 }
 
 void __FlagTrigger(lweapon wpn){
