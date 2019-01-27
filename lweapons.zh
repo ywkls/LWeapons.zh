@@ -222,6 +222,8 @@ const int LWD_4_FIREBALLS_DIAG   = 6;//At death, this lweapon makes 4 diagonal l
 const int LWD_4_FIREBALLS_RANDOM = 7;//At death, this lweapon makes 4 random lweapons.
 const int LWD_8_FIREBALLS        = 8;//At death, this lweapon makes 8 lweapons in all directions.
 const int LWD_SHAKES_SCREEN		 = 9;//At death, makes the screen shake.
+const int LWD_EXP_SHAKE			 = 10;//At death, bomb explodes and shakes screen
+const int LWD_SBOMB_SHAKE		 = 11;//At death, super bomb explodes and shakes screen.
 
 //Ghost ZH compatiblilty stuff. Not needed, really.
 

@@ -82,6 +82,26 @@ void __DoLWeaponDeathSBombExplode(lweapon wpn)
 	Remove(wpn);
 }
 
+// Some of these could probably be combined...
+
+//This lweapon explodes in a bomb blast.
+
+void __DoLWDeathExplodeShake(lweapon wpn)
+{
+    FireNonAngularLWeapon(LW_BOMBBLAST, CenterX(wpn)-8, CenterY(wpn)-8, wpn->Dir, 0, wpn->Damage, -1, 0, LWF_PIERCES_ENEMIES);
+	Screen->Quake = wpn->Misc[LW_ZH_I_ON_DEATH_ARG];
+	Remove(wpn);
+}
+
+//This lweapon explodes in a super bomb blast.
+
+void __DoLWDeathSBombShake(lweapon wpn)
+{
+    FireNonAngularLWeapon(LW_SBOMBBLAST, CenterX(wpn)-8, CenterY(wpn)-8, wpn->Dir, 0, wpn->Damage, -1, 0,LWF_PIERCES_ENEMIES);
+	Screen->Quake = wpn->Misc[LW_ZH_I_ON_DEATH_ARG];
+	Remove(wpn);
+}
+
 //This lweapon produces 4 horizontal and vertical lweapons.
 
 void __DoLWeaponDeath4FireballsHV(lweapon wpn)

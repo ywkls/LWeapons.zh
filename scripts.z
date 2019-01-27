@@ -103,7 +103,7 @@ item script Message{
 item script ScriptBoomerang{
 	void run(int dummy, int range,int level, int Damage, int sprite,int script_id){
 		lweapon brang;
-		if(NumLWeaponsOf(LW_SCRIPT1)==0){
+		if(NumLWeaponsOf(LW_SCRIPT8)==0){
 			brang = FireLWeapon(LW_SCRIPT8, Link->X+InFrontX(Link->Dir,2), Link->Y+InFrontY(Link->Dir,2),
 							 __DirtoRad(Link->Dir), 100, Damage, sprite, SFX_BRANG, LWF_STUNS_ENEMIES|LWF_ITEM_PICKUP);
 			SetLWeaponMovement(brang,LWM_BRANG,range,15);
@@ -146,8 +146,9 @@ item script Fire_Rod{
 			lweapon magic;
 			lweapon wand;
 			wand = FireLWeapon(LW_SCRIPT9,Link->X+InFrontX(Link->Dir,2), Link->Y+InFrontY(Link->Dir,2),
-								__DirtoRad(Link->Dir), 0, damage, spritewand, 0, 0);
+								__DirtoRad(Link->Dir), 0, damage, spritewand, 0, LWF_PIERCES_ENEMIES);
 			SetLWeaponLifespan(wand,LWL_TIMER,10);
+			SetLWeaponMovement(wand,LWM_MELEE,0,LWMF_TRACKER);
 			SetLWeaponDeathEffect(wand,LWD_VANISH,0);
 			magic = FireLWeapon(LW_MAGIC,Link->X+InFrontX(Link->Dir,2), Link->Y+InFrontY(Link->Dir,2),
 								__DirtoRad(Link->Dir), 200, damage, spritemagic, SFX_WAND, 0);
@@ -172,6 +173,7 @@ item script Ice_Rod{
 			wand = FireLWeapon(LW_SCRIPT9,Link->X+InFrontX(Link->Dir,2), Link->Y+InFrontY(Link->Dir,2),
 								__DirtoRad(Link->Dir), 0, damage, spritewand, 0, 0);
 			SetLWeaponLifespan(wand,LWL_TIMER,10);
+			SetLWeaponMovement(wand,LWM_MELEE,0,LWMF_TRACKER);
 			SetLWeaponDeathEffect(wand,LWD_VANISH,0);
 			magic = FireLWeapon(LW_MAGIC,Link->X+InFrontX(Link->Dir,2), Link->Y+InFrontY(Link->Dir,2),
 								__DirtoRad(Link->Dir), 200, 0, 
@@ -509,7 +511,7 @@ item script Run_Hammer{
 		lweapon hammer = FireLWeapon(LW_REFROCK,Link->X+8, Link->Y+8,
 						__DirtoRad(Link->Dir), 0, 5, SPR_HAMMER, 0, LWF_PIERCES_ENEMIES);			
 		SetLWeaponLifespan(hammer,LWL_TIMER,30);
-		SetLWeaponMovement(hammer,LWM_MELEE,0,LWMF_POUND);
+		SetLWeaponMovement(hammer,LWM_MELEE,0,LWMF_POUND|LWMF_TRACKER);
 		SetLWeaponDeathEffect(hammer,LWD_VANISH,0);
 		Game->PlaySound(SFX_HAMMER);
 		Link->Action =LA_ATTACKING;
@@ -550,8 +552,9 @@ item script New_Shovel{
         if(NumLWeaponsOf(LW_REFROCK)==0){
             lweapon mitt= FireScriptedLWeapon(LW_REFROCK, Link->X+InFrontX(Link->Dir,2),
                                                 Link->Y+InFrontY(Link->Dir,2), SPR_SHOVEL,
-                                                SFX_SHOVEL, 8,0);
+                                                SFX_SHOVEL, 8,LWF_PIERCES_ENEMIES);
             SetLWeaponLifespan(mitt,LWL_TIMER,15);
+			SetLWeaponMovement(mitt,LWM_MELEE,0,LWMF_TRACKER);
             SetLWeaponDeathEffect(mitt,LWD_VANISH,0);
             Link->Action = LA_ATTACKING;
             int loc = ComboAt(mitt->X+8,mitt->Y+8);

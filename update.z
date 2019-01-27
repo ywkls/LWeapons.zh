@@ -234,6 +234,10 @@ void UpdateLWZH(lweapon wpn){
                 __DoLWeaponDeathSingleFire(wpn);
 			else if(wpn->Misc[LW_ZH_I_ON_DEATH]==LWD_SHAKES_SCREEN)
 				__DoLWeaponDeathShaky(wpn);
+			else if(wpn->Misc[LW_ZH_I_ON_DEATH]==LWD_EXP_SHAKE)
+                __DoLWDeathExplodeShake(wpn);
+            else if(wpn->Misc[LW_ZH_I_ON_DEATH]==LWD_SBOMB_SHAKE)
+                __DoLWDeathSBombShake(wpn);	
 		}
 			
     } // End death effects
@@ -1322,35 +1326,15 @@ void __UpdateLWF_Knockback(){
 }
 
 void __UpdateLWM_Melee(lweapon wpn){
-	if(OnScreenEdge(wpn)){
-		if(wpn->Dir==DIR_UP){
-			wpn->HitYOffset-=wpn->HitHeight/2;
-			wpn->DrawYOffset-=wpn->HitHeight/2;
-		}
-		else if(wpn->Dir==DIR_DOWN){
-			wpn->HitYOffset+=wpn->HitHeight/2;
-			wpn->DrawYOffset+=wpn->HitHeight/2;
-		}
-		else if(wpn->Dir==DIR_LEFT){
-			wpn->HitXOffset-=wpn->HitWidth/2;
-			wpn->DrawXOffset-=wpn->HitWidth/2;
-		}
-		else if(wpn->Dir==DIR_RIGHT){
-			wpn->HitXOffset+=wpn->HitWidth/2;
-			wpn->DrawXOffset+=wpn->HitWidth/2;
-		}
+	if(wpn->Misc[LW_ZH_I_WORK_3]==0){
+		wpn->HitXOffset =0;
+		wpn->HitYOffset =0;
+		wpn->DrawXOffset=0;
+		wpn->DrawYOffset=0;
 	}
 	else{
-		if(wpn->Misc[LW_ZH_I_WORK_3]==0){
-			wpn->HitXOffset =0;
-			wpn->HitYOffset =0;
-			wpn->DrawXOffset=0;
-			wpn->DrawYOffset=0;
-		}
-		else{
-			if(wpn->Misc[LW_ZH_I_WORK_3]==LWMS_SLASH)
-				__UpdateLW_MS_Slash(wpn);
-		}
+		if(wpn->Misc[LW_ZH_I_WORK_3]==LWMS_SLASH)
+			__UpdateLW_MS_Slash(wpn);
 	}
 	if((wpn->Misc[LW_ZH_I_MOVEMENT_ARG2]&LWMF_TRACKER)!=0){
 		if (Link->Dir == DIR_UP){
@@ -1370,7 +1354,8 @@ void __UpdateLWM_Melee(lweapon wpn){
 		   wpn->Y = Link->Y;
 		}
 		wpn->Z = Link->Z;
-		__Melee_LWeaponDir(wpn);
+		if((wpn->Misc[LW_ZH_I_FLAGS]&LWF_NORMALIZE)==0)
+			__Melee_LWeaponDir(wpn);
 	}
 	if((wpn->Misc[LW_ZH_I_MOVEMENT_ARG2]&LWMF_SLASH)!=0){
 		int loc = ComboAt(wpn->X+8+wpn->HitXOffset,wpn->Y+8+wpn->HitYOffset);
