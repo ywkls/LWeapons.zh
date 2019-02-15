@@ -348,16 +348,20 @@ void SetLWeaponRotation(lweapon wpn, int dir){
 // Kill an lweapon, triggering any death effects
 // Kill an lweapon, triggering any death effects
 void KillLWeapon(lweapon wpn){
-	wpn->Misc[LW_ZH_I_FLAGS]|=__LWFI_DEAD;
-	if(wpn->Misc[LW_ZH_I_ON_DEATH]==0){
-		if((wpn->Misc[LW_ZH_I_FLAGS]&LWF_PIERCES_ENEMIES)!=0){
-			wpn->Misc[LW_ZH_I_FLAGS]&= ~LWF_PIERCES_ENEMIES;
-			wpn->DeadState = 0;
-			Remove(wpn);
+	if((wpn->Misc[LW_ZH_I_FLAGS]&__LWFI_IS_LWZH_LWPN)!=0){
+		wpn->Misc[LW_ZH_I_FLAGS]|=__LWFI_DEAD;
+		if(wpn->Misc[LW_ZH_I_ON_DEATH]==0){
+			if((wpn->Misc[LW_ZH_I_FLAGS]&LWF_PIERCES_ENEMIES)!=0){
+				wpn->Misc[LW_ZH_I_FLAGS]&= ~LWF_PIERCES_ENEMIES;
+				wpn->DeadState = 0;
+				Remove(wpn);
+			}
+			else
+				Remove(wpn);
 		}
-		else
-			Remove(wpn);
 	}
+	else
+		Remove(wpn);
 }
 
 
