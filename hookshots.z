@@ -102,24 +102,6 @@ ffc script GrappleBeam{
 			HookStartY = Link->Y+HookY(Link->Dir);
 			HookX += VectorX(4, HookAngle);
 			HookY += VectorY(4, HookAngle);
-			for(int i=0; i<Ceiling(Length/8); i++){
-				if(Link->Dir==DIR_LEFT||Link->Dir==DIR_RIGHT)	
-					Screen->FastTile(2, HookX+VectorX(8*i, HookAngle-180), HookY+VectorY(8*i, HookAngle-180), TIL_GRAPPLEHOOK+3, CS_GRAPPLEHOOK, 128);
-				else if(Link->Dir==DIR_UP||Link->Dir==DIR_DOWN)	
-					Screen->FastTile(2, HookX+VectorX(8*i, HookAngle-180), HookY+VectorY(8*i, HookAngle-180), TIL_GRAPPLEHOOK+5, CS_GRAPPLEHOOK, 128);
-			}
-			if(Link->Dir==DIR_LEFT||Link->Dir==DIR_RIGHT){
-				if(Link->Dir==DIR_LEFT)
-					flip = FLIP_H;
-				Screen->DrawTile(2, HookX, HookY, TIL_GRAPPLEHOOK+1, 1, 1, CS_GRAPPLEHOOK, -1, -1, 0, 0, 0, flip, true, 128);	
-				Screen->DrawTile(2, HookStartX, HookStartY, TIL_GRAPPLEHOOK+7, 1, 1, CS_GRAPPLEHOOK, -1, -1, 0,0,0, flip, true, 128);
-			}
-			else if(Link->Dir==DIR_DOWN||Link->Dir==DIR_UP){
-				if(Link->Dir==DIR_DOWN)
-					flip = FLIP_V;
-				Screen->DrawTile(2, HookX, HookY, TIL_GRAPPLEHOOK, 1, 1, CS_GRAPPLEHOOK, -1, -1, 0, 0, 0, flip, true, 128);	
-				Screen->DrawTile(2, HookStartX, HookStartY, TIL_GRAPPLEHOOK+6, 1, 1, CS_GRAPPLEHOOK, -1, -1, 0,0,0, flip, true, 128);
-			}
 			Link->X = LinkX;
 			Link->Y = LinkY;
 			Link->Jump = 0;
@@ -139,7 +121,7 @@ ffc script GrappleBeam{
 				Damage->X = HookX;
 				Damage->Y = HookY;
 			}
-			WaitNoAction();
+			Hookshot_Waitframes(HookStartX,HookStartY,HookX,HookY,HookAngle,Length,TIL_GRAPPLEHOOK,2);
 		}
 		if(Damage->isValid())
 			SetLWeaponFlag(Damage,LWF_PIERCES_ENEMIES);
@@ -166,24 +148,6 @@ ffc script GrappleBeam{
 				HookStartX = Link->X+HookX(Link->Dir);
 				HookStartY = Link->Y+HookY(Link->Dir);
 				HookAngle = Angle(HookStartX, HookStartY, HookX, HookY);
-				for(int i=0; i<Ceiling(Distance(HookStartX, HookStartY, HookX, HookY)/8); i++){
-					if(Link->Dir==DIR_LEFT||Link->Dir==DIR_RIGHT)		
-						Screen->FastTile(2, HookX+VectorX(8*i, HookAngle-180), HookY+VectorY(8*i, HookAngle-180), TIL_GRAPPLEHOOK+3, CS_GRAPPLEHOOK, 128);
-					else if(Link->Dir==DIR_UP||Link->Dir==DIR_DOWN)		
-						Screen->FastTile(2, HookX+VectorX(8*i, HookAngle-180), HookY+VectorY(8*i, HookAngle-180), TIL_GRAPPLEHOOK+5, CS_GRAPPLEHOOK, 128);
-				}
-				if(Link->Dir==DIR_LEFT||Link->Dir==DIR_RIGHT){
-					if(Link->Dir==DIR_LEFT)
-						flip = FLIP_H;
-					Screen->DrawTile(2, HookX, HookY, TIL_GRAPPLEHOOK+1, 1, 1, CS_GRAPPLEHOOK, -1, -1, 0, 0, 0, flip, true, 128);	
-					Screen->DrawTile(2, HookStartX, HookStartY, TIL_GRAPPLEHOOK+7, 1, 1, CS_GRAPPLEHOOK, -1, -1, 0,0,0, flip, true, 128);
-				}
-				else if(Link->Dir==DIR_DOWN||Link->Dir==DIR_UP){
-					if(Link->Dir==DIR_DOWN)
-						flip = FLIP_V;
-					Screen->DrawTile(2, HookX, HookY, TIL_GRAPPLEHOOK, 1, 1, CS_GRAPPLEHOOK, -1, -1, 0,0,0, flip, true, 128);	
-					Screen->DrawTile(2, HookStartX, HookStartY, TIL_GRAPPLEHOOK+6, 1, 1, CS_GRAPPLEHOOK, -1, -1, 0,0,0, flip, true, 128);
-				}
 				SFXTimer = __TimedSFX(SFXTimer, SFX_GRAPPLESOUND, FREQ_GRAPPLESOUND);
 				Link->Z= 1;
 				Link->Jump= 0;
@@ -195,9 +159,8 @@ ffc script GrappleBeam{
 					Link->Y+=2;
 				else if(Link->Dir==DIR_UP)
 					Link->Y-=2;
-				if(GrappleSolid(HookX, HookY)||HookX<0
-					||HookX>240||HookY<0||HookY>160||!Damage->isValid())
-				WaitNoAction();
+				Length = Distance(HookStartX,HookStartY,HookX,HookY);
+				Hookshot_Waitframes(HookStartX,HookStartY,HookX,HookY,HookAngle,Length,TIL_GRAPPLEHOOK,2);
 			}
 		}
 		while(Distance(HookStartX, HookStartY, HookX, HookY)>8 ){
@@ -211,29 +174,39 @@ ffc script GrappleBeam{
 			HookAngle = Angle(HookStartX, HookStartY, HookX, HookY);
 			HookX += VectorX(8, HookAngle-180);
 			HookY += VectorY(8, HookAngle-180);
-			for(int i=0; i<Ceiling(Distance(HookStartX, HookStartY, HookX, HookY)/8); i++){
-				if(Link->Dir==DIR_LEFT||Link->Dir==DIR_RIGHT)		
-					Screen->FastTile(2, HookX+VectorX(8*i, HookAngle-180), HookY+VectorY(8*i, HookAngle-180), TIL_GRAPPLEHOOK+3, CS_GRAPPLEHOOK, 128);
-				else if(Link->Dir==DIR_UP||Link->Dir==DIR_DOWN)		
-					Screen->FastTile(2, HookX+VectorX(8*i, HookAngle-180), HookY+VectorY(8*i, HookAngle-180), TIL_GRAPPLEHOOK+5, CS_GRAPPLEHOOK, 128);
-			}
-			if(Link->Dir==DIR_LEFT||Link->Dir==DIR_RIGHT){
-				if(Link->Dir==DIR_LEFT)
-					flip = FLIP_H;
-				Screen->DrawTile(2, HookX, HookY, TIL_GRAPPLEHOOK+1, 1, 1, CS_GRAPPLEHOOK, -1, -1, 0, 0,0, flip, true, 128);	
-				Screen->DrawTile(2, HookStartX, HookStartY, TIL_GRAPPLEHOOK+7, 1, 1, CS_GRAPPLEHOOK, -1, -1, 0,0,0, flip, true, 128);
-			}
-			else if(Link->Dir==DIR_DOWN||Link->Dir==DIR_UP){
-				if(Link->Dir==DIR_DOWN)
-					flip = FLIP_V;
-				Screen->DrawTile(2, HookX, HookY, TIL_GRAPPLEHOOK, 1, 1, CS_GRAPPLEHOOK, -1, -1, 0,0,0, flip, true, 128);	
-				Screen->DrawTile(2, HookStartX, HookStartY, TIL_GRAPPLEHOOK+6, 1, 1, CS_GRAPPLEHOOK, -1, -1, 0,0,0, flip, true, 128);
-			}
+			Length = Distance(HookStartX,HookStartY,HookX,HookY);
 			SFXTimer = __TimedSFX(SFXTimer, SFX_GRAPPLESOUND, FREQ_GRAPPLESOUND);
-			WaitNoAction();
+			Hookshot_Waitframes(HookStartX,HookStartY,HookX,HookY,HookAngle,Length,TIL_GRAPPLEHOOK,2);
 		}
 		KillLWeapon(Damage);
 	}
+}
+
+void Hookshot_Waitframe(int StartX, int StartY, int EndX, int EndY, float angle, int length, int tile){
+	int flip;
+	for(int i=0; i<Ceiling(length/8); i++){
+		if(Link->Dir==DIR_LEFT||Link->Dir==DIR_RIGHT)Screen->FastTile(2, EndX+VectorX(8*i, angle-180), EndY+VectorY(8*i, angle-180), tile+3, CS_GRAPPLEHOOK, 128);
+		else if(Link->Dir==DIR_UP||Link->Dir==DIR_DOWN)	
+			Screen->FastTile(2, EndX+VectorX(8*i, angle-180), EndY+VectorY(8*i, angle-180), tile+5, CS_GRAPPLEHOOK, 128);
+	}
+	if(Link->Dir==DIR_LEFT||Link->Dir==DIR_RIGHT){
+		if(Link->Dir==DIR_LEFT)
+			flip = FLIP_H;
+		Screen->DrawTile(2, EndX, EndY, tile+1, 1, 1, CS_GRAPPLEHOOK, -1, -1, 0, 0, 0, flip, true, 128);	
+		Screen->DrawTile(2, StartX, StartY, tile+7, 1, 1, CS_GRAPPLEHOOK, -1, -1, 0,0,0, flip, true, 128);
+	}
+	else if(Link->Dir==DIR_DOWN||Link->Dir==DIR_UP){
+		if(Link->Dir==DIR_DOWN)
+			flip = FLIP_V;
+		Screen->DrawTile(2, EndX, EndY, tile, 1, 1, CS_GRAPPLEHOOK, -1, -1, 0, 0, 0, flip, true, 128);	
+		Screen->DrawTile(2, StartX, StartY, tile+6, 1, 1, CS_GRAPPLEHOOK, -1, -1, 0,0,0, flip, true, 128);
+	}
+	WaitNoAction();
+}
+
+void Hookshot_Waitframes(int StartX, int StartY, int EndX, int EndY, float angle, int length, int tile, int frames){
+	for(;frames>0;frames--)
+		Hookshot_Waitframe(StartX,StartY,EndX,EndY,angle,length,tile);
 }
 
 const int SWITCH_HOOK_SCRIPT = 8;
@@ -337,24 +310,6 @@ ffc script Switch_Hook{
 			HookStartY = Link->Y+HookY(Link->Dir);
 			HookX += VectorX(4, HookAngle);
 			HookY += VectorY(4, HookAngle);
-			for(int i=0; i<Ceiling(Length/8); i++){
-				if(Link->Dir==DIR_LEFT||Link->Dir==DIR_RIGHT)	
-					Screen->FastTile(2, HookX+VectorX(8*i, HookAngle-180), HookY+VectorY(8*i, HookAngle-180), TIL_GRAPPLEHOOK+3, CS_GRAPPLEHOOK, 128);
-				else if(Link->Dir==DIR_UP||Link->Dir==DIR_DOWN)	
-					Screen->FastTile(2, HookX+VectorX(8*i, HookAngle-180), HookY+VectorY(8*i, HookAngle-180), TIL_GRAPPLEHOOK+5, CS_GRAPPLEHOOK, 128);
-			}
-			if(Link->Dir==DIR_LEFT||Link->Dir==DIR_RIGHT){
-				if(Link->Dir==DIR_LEFT)
-					flip = FLIP_H;
-				Screen->DrawTile(2, HookX, HookY, TIL_GRAPPLEHOOK+1, 1, 1, CS_GRAPPLEHOOK, -1, -1, 0,0,0, flip, true, 128);	
-				Screen->DrawTile(2, HookStartX, HookStartY, TIL_GRAPPLEHOOK+7, 1, 1, CS_GRAPPLEHOOK, -1, -1, 0,0,0, flip, true, 128);
-			}
-			else if(Link->Dir==DIR_DOWN||Link->Dir==DIR_UP){
-				if(Link->Dir==DIR_DOWN)
-					flip = FLIP_V;
-				Screen->DrawTile(2, HookX, HookY, TIL_GRAPPLEHOOK, 1, 1, CS_GRAPPLEHOOK, -1, -1, 0,0,0, flip, true, 128);	
-				Screen->DrawTile(2, HookStartX, HookStartY, TIL_GRAPPLEHOOK+6, 1, 1, CS_GRAPPLEHOOK, -1, -1, 0,0,0, flip, true, 128);
-			}
 			Link->X = LinkX;
 			Link->Y = LinkY;
 			Link->Jump = 0;
@@ -374,7 +329,7 @@ ffc script Switch_Hook{
 				Damage->X = HookX;
 				Damage->Y = HookY;
 			}
-			WaitNoAction();
+			Hookshot_Waitframes(HookStartX,HookStartY,HookX,HookY,HookAngle,Length,TIL_GRAPPLEHOOK,2);
 		}
 		if(Damage->isValid())
 			SetLWeaponFlag(Damage,LWF_PIERCES_ENEMIES);
@@ -408,28 +363,10 @@ ffc script Switch_Hook{
 			HookAngle = Angle(HookStartX, HookStartY, HookX, HookY);
 			HookX += VectorX(8, HookAngle-180);
 			HookY += VectorY(8, HookAngle-180);
-			for(int i=0; i<Ceiling(Distance(HookStartX, HookStartY, HookX, HookY)/8); i++){
-				if(Link->Dir==DIR_LEFT||Link->Dir==DIR_RIGHT)		
-					Screen->FastTile(2, HookX+VectorX(8*i, HookAngle-180), HookY+VectorY(8*i, HookAngle-180), TIL_GRAPPLEHOOK+3, CS_GRAPPLEHOOK, 128);
-				else if(Link->Dir==DIR_UP||Link->Dir==DIR_DOWN)		
-					Screen->FastTile(2, HookX+VectorX(8*i, HookAngle-180), HookY+VectorY(8*i, HookAngle-180), TIL_GRAPPLEHOOK+5, CS_GRAPPLEHOOK, 128);
-			}
-			if(Link->Dir==DIR_LEFT||Link->Dir==DIR_RIGHT){
-				if(Link->Dir==DIR_LEFT)
-					flip = FLIP_H;
-				Screen->DrawTile(2, HookX, HookY, TIL_GRAPPLEHOOK+1, 1, 1, CS_GRAPPLEHOOK, -1, -1, 0,0,0, flip, true, 128);	
-				Screen->DrawTile(2, HookStartX, HookStartY, TIL_GRAPPLEHOOK+7, 1, 1, CS_GRAPPLEHOOK, -1, -1, 0,0,0, flip, true, 128);
-			}
-			else if(Link->Dir==DIR_DOWN||Link->Dir==DIR_UP){
-				if(Link->Dir==DIR_DOWN)
-					flip = FLIP_V;
-				Screen->DrawTile(2, HookX, HookY, TIL_GRAPPLEHOOK, 1, 1, CS_GRAPPLEHOOK, -1, -1, 0,0,0, flip, true, 128);	
-				Screen->DrawTile(2, HookStartX, HookStartY, TIL_GRAPPLEHOOK+6, 1, 1, CS_GRAPPLEHOOK, -1, -1, 0,0,0, flip, true, 128);
-			}
 			SFXTimer = __TimedSFX(SFXTimer, SFX_GRAPPLESOUND, FREQ_GRAPPLESOUND);
 			Link->InputUp = false;
 			Link->InputDown = false;
-			WaitNoAction();
+			Hookshot_Waitframes(HookStartX,HookStartY,HookX,HookY,HookAngle,Length,TIL_GRAPPLEHOOK,2);
 		}
 		KillLWeapon(Damage);
 	}
