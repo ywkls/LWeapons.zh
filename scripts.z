@@ -697,7 +697,7 @@ item script Bouncy_Ball{
 			lweapon ball = FireLWeapon(LW_SCRIPT1,Link->X,Link->Y,__DirtoRad(Link->Dir),
 											0,0,sprite,0,0);
 			SetLWeaponSFX(ball,sfx,0);
-			SetLWeaponMovement(ball,LWM_BOUNCE,VX,VY);
+			SetLWeaponMovement(ball,LWM_CAROM,VX,VY);
 			SetLWeaponDeathEffect(ball,LWD_VANISH,0);
 		}
 	}

@@ -1,4 +1,4 @@
-//Lweapons.zh Version 1.4.1
+//Lweapons.zh Version 1.4.6
 
 +-------+
 | USAGE |
@@ -26,7 +26,7 @@ spawn additional lweapons. These behaviors require the weapons to be passed
 into UpdateLWZH2() each frame.
 
 To prevent conflicts with Lweapons.zh, scripts should avoid using the index
-lweapon->Misc[LW_ZH_I_FLAGS]. This index is set to 15 by default, but they can be changed.
+lweapon->Misc[LW_ZH_I_FLAGS]. This index is set to 15 by default, but that can be changed.
 
 Functions, variables, and constants whose names start with __ are for internal
 use and may be changed or removed in future versions without warning.
@@ -195,7 +195,7 @@ void SetLWeaponMovement(lweapon wpn, int type, int arg, int arg2)
  *		This lweapon is carried above Link's head.
  *		Not yet fully supported.
  *
- * LWM_BOUNCE
+ * LWM_CAROM
  *		This lweapon bounces off of solid objects.
  *		Velocity is auto-adjusted to correspond to the direction you're facing.
  *		arg: X velocity
@@ -227,6 +227,9 @@ void SetLWeaponMovement(lweapon wpn, int type, int arg, int arg2)
  *
  * 			LWSF_ALL	 
  *				Blocks all eweapons.
+ //* LWM_BOUNCE
+ //*		This lweapon is not yet supported.
+ //*	
   
 +----------+
 | LIFESPAN |
@@ -244,7 +247,7 @@ void SetLWeaponMovement(lweapon wpn, int type, int arg, int arg2)
  *
  * LWL_SOLID
  *	  Dies after running into a solid combo.
- *	  srg: Combo Type which can be passed through
+ *	  arg: Combo Type which can be passed through
  *
  * LWL_MP_COST
  *	 Dies if Link->MP falls below a certain amount.
@@ -253,7 +256,7 @@ void SetLWeaponMovement(lweapon wpn, int type, int arg, int arg2)
  *
  * LWL_EDGE
  *	 Dies if weapon passes the edge of the screen.
- *	 arg: With boomerangs, set the sprite for sparkles.
+ *	 arg: With boomerangs, sets the sprite for sparkles.
  *
  *
   
@@ -271,7 +274,7 @@ void SetLWeaponMovement(lweapon wpn, int type, int arg, int arg2)
  * 
  * LWD_AIM_AT_NPC
  *    The weapon pauses for a moment, then aims at a random enemy is any exist.
- *    arg: Delay
+ *    arg: Delay before aiming
  * 
  * LWD_EXPLODE
  *    The weapon explodes.
@@ -325,6 +328,7 @@ void SetLWeaponMovement(lweapon wpn, int type, int arg, int arg2)
  *
 //* LWD_FREEZE
 //*    Creates an ice block that freezes the enemy.
+//*    Not yet supported
 //*    arg: Sprite of ice block.
 //*
 
@@ -353,9 +357,10 @@ These functions are mostly used internally and probably shouln't be called in yo
 
 lweapon FindMiscLWeapon(int Weapon_ID)
 * 	Finds an lweapon with a Miscellaneous value set to Weapon_ID.
+*   Used by an ffc to determine which LWeapon is running a specific script
  
  void SetLWeaponDir(lweapon wpn)
- * Set the direction of an angled eweapon so that it interacts correctly
+ * Set the direction of an angled lweapon so that it interacts correctly
  * with shields. This is normally handled automatically, but you may need
  * to use it if you script a weapon's movement yourself.
 
@@ -436,6 +441,9 @@ int LWBlockType(lweapon wpn)
 int LWBlockType(int wpn_id,lweapon wpn)
 *	Determines what combo types block an lweapon with multiple types.
 
+int CreateGraphicAt(int sprite, int x, int y)
+*	Creates indicated sprite and x and y coordinates.
+
 //int GetComboSprite(int type)
 //*	Determines what sprite is created if a combo type is destroyed.
 //*	Not fully supported.
@@ -444,5 +452,3 @@ int LWBlockType(int wpn_id,lweapon wpn)
 //*	Determines what sound is made if a combo type is destroyed.
 //*	Not fully supported.
 
-//int CreateGraphicAt(int sprite, int x, int y)
-//*	Creates indicated sprite and x and y coordinates.

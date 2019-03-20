@@ -102,8 +102,8 @@ const int NPC_MISC_TARGET_NUMBER = 3;//Npc index to store the fact that it has b
 //Engine Constants
 
 const int LW_SHADOW_TRANSLUCENT = 0;//Sets whether shadows cast by lweapons are translucent.
-const int LW_SHADOW_TILE 		= 832;
-const int LW_LARGE_SHADOW_TILE 	= 792; // Top-left corner
+const int LW_SHADOW_TILE 		= 832;//Small shadow tile
+const int LW_LARGE_SHADOW_TILE 	= 792; // Top-left corner of 2 x 2 large shadow tiles
 
 //Lweapon Misc Indices
 //These must be unique numbers between 0 and 15.
@@ -133,7 +133,7 @@ const int LWM_BRANG             = 5;//LWeapon that acts like a boomerang.
 const int LWM_FULL_SCREEN		= 9;//LWeapon that covers the screen.
 const int LWM_STRAFE 			= 10;//LWeapon that causes strafing movement.
 const int LWM_THROW             = 15;//Lweapon that is thrown.
-const int LWM_BOUNCE			= 16;//LWeapon that bounces on the floor.
+//const int LWM_BOUNCE			= 16;//LWeapon that bounces on the floor.
 const int LWM_CAROM				= 17;//LWeapon that bounces off walls.
 const int LWM_FALL              = 19;//Lweapon that falls from the air.
 
@@ -152,9 +152,10 @@ const int LWMF_BOUNCE 				= 00000000100b;//This weapon bounces when it hits the 
 const int LWMF_SLASH 				= 00000001000b;//This weapon slashs bushs, flowers and other combos.
 const int LWMF_POUND 				= 00000010000b;//This weapon pounds hammer pegs.
 const int LWMF_TRACKER				= 00000100000b;//This weapon moves and changes appearance as you do.
-const int LWMF_REFLECTS_EWPN		= 00010000000b;//This lweapon reflects Eweapons.
+const int LWMF_REFLECTS_EWPN		= 00001000000b;//This lweapon reflects Eweapons.
 
 //Movement styles for Melee Lweapons
+//Not yet supported
 
 const int LWMS_STAB        = 1;//This lweapon stabs in and out.
 const int LWMS_SLASH	   = 2;//This lweapon moves does a slash
@@ -167,7 +168,7 @@ const int LWSF_BEAM					= 00000000010b;//Blocks sword beams
 const int LWSF_ARROW 				= 00000000100b;//Blocks arrows.
 const int LWSF_ROCK 				= 00000001000b;//Blocks rocks.
 const int LWSF_MAGIC 				= 00000010000b;//Blocks magic
-const int LWSF_BRANG				= 00010000000b;//Blocks boomerangs
+const int LWSF_BRANG				= 00000100000b;//Blocks boomerangs
 const int LWSF_ALL					= 00100000000b;//Blocks all eweapons.
 
 // Arguments to SetLWeaponLifespan()
