@@ -55,7 +55,7 @@ void SetLWeaponMovement(lweapon wpn, int type, int arg, int arg2)
     }
 	else if(type==LWM_CIRCLE)
 		wpn->Misc[LW_ZH_I_WORK]= RadtoDeg(wpn->Angle);
-	else if(type==LWM_BOUNCE){
+	else if(type==LWM_CAROM){
 		int dir = AngleDir4(wpn->Angle);
 		if(dir==DIR_RIGHT){
 			if(wpn->Misc[LW_ZH_I_MOVEMENT_ARG]<=0)
