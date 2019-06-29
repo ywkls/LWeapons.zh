@@ -343,6 +343,15 @@ bool WeaponCollision(ffc a, lweapon b) {
 						bx, by, bx+b->HitWidth-1, by+b->HitHeight-1);
 }
 
+bool __OnSidePlatform(int x, int y, int xOff, int yOff, int h, int w) {
+	for(int i =0;i<=w-1;i++){
+		if(Screen->isSolid((x+xOff+i),(y+yOff)+h) 
+		    && Screen->Flags[SF_ROOMTYPE]&4)
+			return true;
+	}
+	return false;
+}
+
 //Returns the amount in radians for a direction.
 
 float __DirtoRad(int dir){

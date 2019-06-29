@@ -368,9 +368,9 @@ void KillLWeapon(lweapon wpn){
 //Removes a specific lweapon type.
 
 void RemoveLWeaponType(int type){
-	for(int i = 1;i<=Screen->NumLWeapons();i++){
+	for(int i = Screen->NumLWeapons();i>0;i--){
 		lweapon e = Screen->LoadLWeapon(i);
-		if(e->ID==type)Remove(e);
+		if(e->ID==type)KillLWeapon(e);
 	}
 }
 

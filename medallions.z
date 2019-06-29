@@ -23,11 +23,12 @@ ffc script Bombos_Spell{
 		int i;
 		int counter;
 		int timer;
+		Link->CollDetection=false;
 		for(i=0;i<=3;i++){
 			fireball= FireLWeapon(LW_SCRIPT1, Link->X + 8,
 									 Link->Y+8, __DirtoRad(i), 
 									 100, 0, SPR_FIRE, SFX_FIRE, 
-									 LWF_LINK_NO_COLL|LWF_PIERCES_ENEMIES|LWF_NORMALIZE);
+									 LWF_PIERCES_ENEMIES|LWF_NORMALIZE);
 			SetLWeaponLifespan(fireball,LWL_TIMER,180);
 			SetLWeaponMovement(fireball,LWM_CIRCLE,32,10);
 			SetLWeaponDeathEffect(fireball,LWD_VANISH,0);
@@ -45,7 +46,6 @@ ffc script Bombos_Spell{
 				fire->Y=Rand(176);
 				fire->Damage = 8;
 				SetLWeaponFlag(fire,__LWFI_IS_LWZH_LWPN);
-				SetLWeaponFlag(fire,LWF_LINK_NO_COLL);
 				counter--;
 				timer=8;
 			}	
@@ -55,7 +55,6 @@ ffc script Bombos_Spell{
 		fire->X=Link->X;
 		fire->Y=Link->Y;
 		SetLWeaponFlag(fire,__LWFI_IS_LWZH_LWPN);
-		SetLWeaponFlag(fire,LWF_LINK_NO_COLL);
 		fireball= FireLWeapon(LW_SCRIPT1, Link->X + 8,
 									 Link->Y+8, DegtoRad(0), 
 									 0, 20, SPR_NULL, SFX_FIRE, 
@@ -63,6 +62,7 @@ ffc script Bombos_Spell{
 		SetLWeaponLifespan(fireball,LWL_TIMER,60);
 		SetLWeaponMovement(fireball,LWM_FULL_SCREEN,0x0c,64);
 		SetLWeaponDeathEffect(fireball,LWD_VANISH,0);
+		Link->CollDetection=true;
 	}
 }
 

@@ -3,9 +3,9 @@
 //Fixes Link's collision detection if it needs it.
 
 void UpdateLWZH1(){
-	__CollDetectFix();
+	//__CollDetectFix();
 	__ReflectedFix1();
-	__Carry_InputBlock();
+	//__Carry_InputBlock();
 }
 
 //Handle restoring Link's collision detection.
@@ -649,7 +649,7 @@ void __UpdateLWMThrow(lweapon wpn)
 		!OnSidePlatform(wpn->X, wpn->Y, 
 							wpn->HitXOffset,
 							wpn->HitYOffset, 
-							wpn->HitHeight)) // Z>0
+							wpn->HitHeight,wpn->HitWidth)) // Z>0
 			wpn->Misc[LW_ZH_I_WORK]=Max(wpn->Misc[LW_ZH_I_WORK]-GH_GRAVITY, -GH_TERMINAL_VELOCITY);
 	else{
 		bool done=false;
@@ -1307,10 +1307,10 @@ void __UpdateLWF_Collision(lweapon wpn){
 void __UpdateLWF_Link_CollOff(){
 	if(Link->CollDetection){
 		Link->CollDetection= false;
-		LW_Vars[NOT_COLL]=0;
+		LW_Vars[NOT_COLL]=1;
 	}
 	else if(!LW_Vars[NOT_COLL] && !Link->CollDetection)
-		LW_Vars[NOT_COLL]=1;
+		LW_Vars[NOT_COLL]=0;
 }
 
 //Makes it where Link can't move while this lweapon is active.

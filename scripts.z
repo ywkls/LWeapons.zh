@@ -270,7 +270,7 @@ item script Meteor{
 //D2- Screen->D register to store secrets in.
 	
 ffc script LWeapon_Index_Trigger{
-	void run(int type, int level, int perm){
+	void run(int type, int level, int perm, int sfx){
 		lweapon thing;
 		int i;
 		bool triggered = false;
@@ -289,7 +289,10 @@ ffc script LWeapon_Index_Trigger{
 		Screen->TriggerSecrets();
 		Screen->State[ST_SECRET]= true;
 		Screen->D[perm] = 1;
-		Game->PlaySound(SFX_SECRET);
+		if(sfx)
+			Game->PlaySound(sfx);
+		else
+			Game->PlaySound(SFX_SECRET);
 	}
 }
 

@@ -303,7 +303,7 @@ void Drawn_Enemy_Waitframes(ffc this,npc ghost,int frames){
 //Removes a specific eweapon type.
 
 void RemoveEWeaponType(int type){
-	for(int i = 1;i<=Screen->NumEWeapons();i++){
+	for(int i = Screen->NumEWeapons();i>0;i--){
 		eweapon e = Screen->LoadEWeapon(i);
 		if(e->ID==type)Remove(e);
 	}
