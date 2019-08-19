@@ -753,7 +753,8 @@ void __UpdateLWM_Circle(lweapon wpn){
 						VectorY(wpn->Misc[LW_ZH_I_MOVEMENT_ARG],wpn->Misc[LW_ZH_I_WORK]);//)-(Link->Y+8);
 	
 	wpn->Angle = DegtoRad(wpn->Misc[LW_ZH_I_WORK]);
-	SetLWeaponDir(wpn);
+	if((wpn->Misc[LW_ZH_I_FLAGS]&LWF_NORMALIZE)==0)
+		SetLWeaponDir(wpn);
 	wpn->X=Link->X;
 	wpn->Y=Link->Y;							
 	wpn->DrawXOffset= wpn->HitXOffset;

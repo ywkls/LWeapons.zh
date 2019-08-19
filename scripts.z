@@ -161,8 +161,8 @@ item script Fire_Rod{
 	}
 }
 
-const int ICE_ROD_SCRIPT = 0;
-const int ICE_BLOCK_COMBO =0;
+const int ICE_ROD_SCRIPT = 2;
+const int ICE_BLOCK_COMBO =3449;
 
 item script Ice_Rod{
 	void run(int dummy, int MPCost, int damage, int spritemagic, int spritewand){
@@ -179,6 +179,7 @@ item script Ice_Rod{
 								__DirtoRad(Link->Dir), 200, 0, 
 								spritemagic, SFX_WAND, LWF_STUNS_ENEMIES);
 			SetLWeaponLifespan(magic,LWL_EDGE,0);
+			SetLWeaponScript(magic,ICE_ROD_SCRIPT,Rand(0,255));
 			Link->Action = LA_ATTACKING;
 			Link->MP-=MPCost;
 		}
@@ -444,6 +445,9 @@ ffc script IceRodFFC{
 				this->Y = impactY;
 				//Set up timer.
 				Ice_Timer = MAX_ICE_TIME;
+			}
+			while(Ice_Timer>0){
+				Ice_Timer--;
 				if(BlockWidth>0){
 					for(i=impactX+16;i<(impactX+BlockWidth);i+=16)
 						Screen->FastCombo(3,i,impactY,ICE_BLOCK_COMBO,ICEBLOCK_CSET,64);
@@ -454,9 +458,6 @@ ffc script IceRodFFC{
 							Screen->FastCombo(3,i,j,ICE_BLOCK_COMBO,ICEBLOCK_CSET,64);	
 					}
 				}
-			}
-			while(Ice_Timer>0){
-				Ice_Timer--;
 				if(Ice_Timer<5){
 					if(current_enemy->isValid())
 						current_enemy->Misc[GEN_MISC_FLAGS]&=~NPC_F_FREEZE;
