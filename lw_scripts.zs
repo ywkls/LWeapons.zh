@@ -275,7 +275,8 @@ ffc script LWeapon_Index_Trigger{
 		lweapon thing;
 		int i;
 		bool triggered = false;
-		if(Screen->D[perm]!=0)triggered = true;
+		if(Screen->D[perm]!=0)
+			triggered = true;
 		while(!triggered){
 			for(i = 1;i<=Screen->NumLWeapons();i++){
 				thing = Screen->LoadLWeapon(i);
@@ -384,8 +385,8 @@ ffc script IceRodFFC{
 		int impactX;
 		int impactY;
 		//Increase size of platform for larger enemies.
-		int BlockWidth;
-		int BlockHeight;
+		int BlockWidth=1;
+		int BlockHeight=1;
 		int Ice_Timer;//Used internally by ffc to track how long ice combo has existed.
 		int i;
 		int j;
@@ -419,8 +420,8 @@ ffc script IceRodFFC{
 							&& (current_enemy->Misc[GEN_MISC_FLAGS]&NPC_F_FREEZE)==0){
 							impactX = current_enemy->X;
 							impactY = current_enemy->Y;
-							if(current_enemy->TileWidth>1)BlockWidth = current_enemy->TileWidth;
-							if(current_enemy->TileHeight>1)BlockHeight = current_enemy->TileHeight;
+							BlockWidth = current_enemy->TileWidth;
+							BlockHeight = current_enemy->TileHeight;
 							//Stun the enemy.
 							current_enemy->Stun = MAX_ICE_TIME;
 							current_enemy->Misc[GEN_MISC_FLAGS]|=NPC_F_FREEZE;
@@ -448,16 +449,20 @@ ffc script IceRodFFC{
 			}
 			while(Ice_Timer>0){
 				Ice_Timer--;
-				if(BlockWidth>0){
-					for(i=impactX+16;i<(impactX+BlockWidth);i+=16)
-						Screen->FastCombo(3,i,impactY,ICE_BLOCK_COMBO,ICEBLOCK_CSET,64);
-				}
-				if(BlockHeight >0){
-					for(j= impactY+16;j<=impactY+(BlockHeight*16);j+=16){
-						for(i=impactX;i<(impactX+BlockWidth);i+=16)
+				///if(BlockWidth>1){
+					///for(i=impactX;i<(impactX+BlockWidth*16);i+=16)
+						///Screen->FastCombo(3,i,impactY,ICE_BLOCK_COMBO,ICEBLOCK_CSET,64);
+				//}
+				//else
+					//Screen->FastCombo(3,impactX,impactY,ICE_BLOCK_COMBO,ICEBLOCK_CSET,64);
+				//if(BlockHeight >1){
+					for(j= impactY;j<impactY+(BlockHeight*16);j+=16){
+						for(i=impactX;i<impactX+(BlockWidth*16);i+=16)
 							Screen->FastCombo(3,i,j,ICE_BLOCK_COMBO,ICEBLOCK_CSET,64);	
 					}
-				}
+				//}
+				//else
+					//Screen->FastCombo(3,impactX,impactY,ICE_BLOCK_COMBO,ICEBLOCK_CSET,64);
 				if(Ice_Timer<5){
 					if(current_enemy->isValid())
 						current_enemy->Misc[GEN_MISC_FLAGS]&=~NPC_F_FREEZE;
@@ -566,22 +571,32 @@ item script New_Shovel{
 				&& Screen->ComboT[loc]==CT_NONE && !Screen->isSolid(mitt->X+8,mitt->Y+8)
 				&& Screen->ComboD[loc]!=DUG_COMBO
 				&& !ScreenFlagTest(SF_MISC,SF_MISC_SCRIPT3)){
-				Screen->ComboD[loc]=DUG_COMBO;
-				if(Screen->RoomType!=RT_SPECIALITEM ||
-					(Screen->RoomType==RT_SPECIALITEM
-					&& Screen->State[ST_SPECIALITEM]))
-					ItemSetAt(IS_COMBOS,loc);
-				else{
-					if(ComboFI(loc,CF_ARMOSITEM)){
-						item theitem = Screen->CreateItem(Screen->RoomData);
-						theitem->X= ComboX(loc);
-						theitem->Y= ComboY(loc);
-						theitem->Pickup |= IP_HOLDUP;
-						int Args[8]= {theitem->ID};
-						NewFFCScript(ITEM_MONITOR_SCRIPT,Args);
-					}
+				if(Screen->ComboT[loc]==CT_SCRIPT1){
+					if(ComboFI(loc,CF_WHISTLE))
+						Screen->ComboD[loc]= Screen->UnderCombo;
 					else
+						Screen->ComboD[loc]=DUG_UP_COMBO;
+					if(Screen->RoomType!=RT_SPECIALITEM ||
+						(Screen->RoomType==RT_SPECIALITEM
+						&& Screen->State[ST_SPECIALITEM]))
 						ItemSetAt(IS_COMBOS,loc);
+					else{
+						if(ComboFI(loc,CF_DIVEITEM)){
+							item theitem = Screen->CreateItem(Screen->RoomData);
+							theitem->X= ComboX(loc);
+							theitem->Y= ComboY(loc);
+							theitem->Pickup |= IP_HOLDUP;
+							theitem->Pickup |= IP_ST_SPECIALITEM;
+							Screen->ComboF[loc]= 0;
+							Screen->ComboI[loc]= 0;
+						}					
+						else
+							ItemSetAt(IS_COMBOS,loc);
+					}	
+				}
+				else{
+					Screen->ComboD[loc]=DUG_UP_COMBO;
+					ItemSetAt(IS_COMBOS,loc);
 				}
 			}
             else
@@ -589,24 +604,6 @@ item script New_Shovel{
         }
     }
 }
-
-const int ITEM_MONITOR_SCRIPT = 13;
-
-ffc script ItemMonitor{
-	void run(int item_to_watch){
-		int i;
-		item the_item;
-		for(i = Screen->NumItems();i>0;i--){
-			the_item = Screen->LoadItem(i);
-			if(the_item->ID==item_to_watch)
-				break;
-		}
-		while(the_item->isValid())
-			Waitframe();
-		Screen->State[ST_SPECIALITEM]= true;
-	}
-}
-
 
 item script Use_Bombchu{
 	void run(int dummy, int counter, int bombchu_life){

@@ -3,7 +3,7 @@
 
 //Checks if one is true and the other is false.
 
-bool Xor(bool A, bool B){
+bool __Xor(bool A, bool B){
 	if((A&&!B)||(B&&!A))
 		return true;
 	return false;
@@ -229,14 +229,14 @@ bool CanMove(lweapon e,int dir,int imprecision){
 	return true;
 }
 
-bool DistX(lweapon a, int distance) {
+bool __DistX(lweapon a, int distance) {
     int dist;
     if ( a->X > Link->X ) dist = a->X - Link->X;
 	else dist = Link->X - a->X;
     return ( dist <= distance );
 }
 
-bool DistY(lweapon a, int distance) {
+bool __DistY(lweapon a, int distance) {
     int dist;
     if ( a->Y > Link->Y ) dist = a->Y - Link->Y;
 	else dist = Link->Y - a->Y;
@@ -267,6 +267,40 @@ bool WeaponCollision(npc b, lweapon a) {
   return RectCollision(ax, ay, ax+a->HitWidth-1, ay+a->HitHeight-1, 
 						bx, by, bx+b->HitWidth-1, by+b->HitHeight-1)
 						&& (a->Z + a->HitZHeight >= b->Z) && (a->Z <= b->Z + b->HitZHeight);
+}
+
+//A collision between an lweapon and an npc.
+bool WeaponCollision(lweapon a, npc b, bool Z_Axis) {
+  int ax = a->X + a->HitXOffset+1;
+  int bx = b->X + b->HitXOffset+1;
+  int ay = a->Y + a->HitYOffset+1;
+  int by = b->Y + b->HitYOffset+1;
+  if(!b->CollDetection || !a->CollDetection)
+	return false;
+  if(Z_Axis)
+	return RectCollision(ax, ay, ax+a->HitWidth-1, ay+a->HitHeight-1, 
+						bx, by, bx+b->HitWidth-1, by+b->HitHeight-1)
+						&& (a->Z + a->HitZHeight >= b->Z) && (a->Z <= b->Z + b->HitZHeight);
+  else
+	return RectCollision(ax, ay, ax+a->HitWidth-1, ay+a->HitHeight-1, 
+						bx, by, bx+b->HitWidth-1, by+b->HitHeight-1);
+}
+
+//A collision between an lweapon and an npc.
+bool WeaponCollision(npc b, lweapon a, bool Z_Axis) {
+  int ax = a->X + a->HitXOffset+1;
+  int bx = b->X + b->HitXOffset+1;
+  int ay = a->Y + a->HitYOffset+1;
+  int by = b->Y + b->HitYOffset+1;
+  if(!b->CollDetection || !a->CollDetection)
+	return false;
+  if(Z_Axis)
+	return RectCollision(ax, ay, ax+a->HitWidth-1, ay+a->HitHeight-1, 
+						bx, by, bx+b->HitWidth-1, by+b->HitHeight-1)
+						&& (a->Z + a->HitZHeight >= b->Z) && (a->Z <= b->Z + b->HitZHeight);
+  else
+	return RectCollision(ax, ay, ax+a->HitWidth-1, ay+a->HitHeight-1, 
+						bx, by, bx+b->HitWidth-1, by+b->HitHeight-1);
 }
 
 //A collision between an lweapon and an npc.
@@ -352,6 +386,22 @@ bool __OnSidePlatform(int x, int y, int xOff, int yOff, int h, int w) {
 	return false;
 }
 
+bool __IsChest(int loc){
+	if(Screen->ComboT[loc]==CT_CHEST)
+		return true;
+	if(Screen->ComboT[loc]==CT_CHEST2)
+		return true;
+	if(Screen->ComboT[loc]==CT_BOSSCHEST)
+		return true;
+	if(Screen->ComboT[loc]==CT_BOSSCHEST2)
+		return true;
+	if(Screen->ComboT[loc]==CT_LOCKEDCHEST)
+		return true;
+	if(Screen->ComboT[loc]==CT_LOCKEDCHEST2)
+		return true;
+	return false;
+}
+
 //Returns the amount in radians for a direction.
 
 float __DirtoRad(int dir){
@@ -367,7 +417,7 @@ float __DirtoRad(int dir){
 
 //Draws a screen specified by 'sourceMap and sourceScreen;, from layers specified by 'layerMin and layerMax', 
 //at a desired opacity, to the layer specified by 'destLayer' of the current screen.
-void ScreenToLayer(int sourceMap, int sourceScreen, int layerMin, int layerMax, int drawOpacity, int destLayer){
+void __ScreenToLayer(int sourceMap, int sourceScreen, int layerMin, int layerMax, int drawOpacity, int destLayer){
 	for (int i = layerMin; i < layerMax; i++){
 		Screen->DrawLayer(destLayer, sourceMap, sourceScreen, i, 0, 0, 0, drawOpacity);
 	}
@@ -375,7 +425,7 @@ void ScreenToLayer(int sourceMap, int sourceScreen, int layerMin, int layerMax, 
 
 //Draws all layers of a screen specified by 'sourceMap and sourceScreen;,
 //at a desired opacity, to the layer specified by 'destLayer' of the current screen.
-void ScreenToLayer(int sourceMap, int sourceScreen, int drawOpacity, int destLayer){
+void __ScreenToLayer(int sourceMap, int sourceScreen, int drawOpacity, int destLayer){
 	for (int i = 0; i < 6; i++){
 		Screen->DrawLayer(destLayer, sourceMap, sourceScreen, i, 0, 0, 0, drawOpacity);
 	}
@@ -430,7 +480,7 @@ int NewFFCScript(int scriptNum, float args){
             for(int j=Min(SizeOfArray(args), 8)-1; j>=0; j--)
                 theFFC->InitD[j]=args[j];
         }
-        
+        theFFC->Flags[FFCF_ETHEREAL]= true;
         return i;
     }
     

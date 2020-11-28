@@ -47,6 +47,11 @@ int LWDefense(int type){
 	else if(type == LW_REFMAGIC)return NPCD_REFMAGIC;
 	else if(type == LW_REFFIREBALL)return NPCD_REFFIREBALL;
 	else if(type == LW_REFROCK)return NPCD_REFROCK;
+	else if(type == LW_HOOKSHOT)return NPCD_HOOKSHOT;
+	else if(type == LW_WAND)return NPCD_WAND;
+	else if(type == LW_SWORD)return NPCD_SWORD;
+	else if(type == LW_HAMMER)return NPCD_HAMMER;
+	else if(type == LW_CANEOFBYRNA)return NPCD_BYRNA;
 	else if(Between(type,LW_SCRIPT1,LW_SCRIPT10))return NPCD_SCRIPT;
 }
 

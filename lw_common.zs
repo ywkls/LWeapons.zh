@@ -9,7 +9,8 @@ lweapon FireLWeapon(int weaponID, int x, int y, float angle, int step, int damag
     wpn->Y=y;
     wpn->Step=step;
     wpn->Damage=damage;
-    wpn->Angular=true;
+	if(RadtoDeg(angle)%90!=0)
+		wpn->Angular=true;
     wpn->Angle=angle;
     
     if(sprite>=0)
@@ -17,7 +18,6 @@ lweapon FireLWeapon(int weaponID, int x, int y, float angle, int step, int damag
 	else
 		SetDefaultSprite(wpn);
     wpn->Misc[LW_ZH_I_FLAGS]=flags|__LWFI_IS_LWZH_LWPN;
-    //if((wpn->Misc[LW_ZH_I_FLAGS]&LWF_CAN_REFLECT)!=0)wpn->Misc[LW_ZH_I_WORK]= sprite;
 	if((wpn->Misc[LW_ZH_I_FLAGS]&LWF_NORMALIZE)==0)
 		SetLWeaponDir(wpn); // After flags so unblockability is detected
 	if(sound>=0)
@@ -346,7 +346,7 @@ void SetLWeaponRotation(lweapon wpn, int dir){
 }
 
 // Kill an lweapon, triggering any death effects
-// Kill an lweapon, triggering any death effects
+
 void KillLWeapon(lweapon wpn){
 	if((wpn->Misc[LW_ZH_I_FLAGS]&__LWFI_IS_LWZH_LWPN)!=0){
 		wpn->Misc[LW_ZH_I_FLAGS]|=__LWFI_DEAD;
@@ -414,7 +414,7 @@ lweapon FindMiscLWeapon(int Weapon_ID){
 //Finds an lweapon of a certain type.
 
 lweapon FindLWeaponType(int type){
-	for(int i = 1;i<=Screen->NumLWeapons();i++){
+	for(int i = Screen->NumLWeapons();i>0;i--){
 		lweapon e = Screen->LoadLWeapon(i);
 		if(e->ID==type)return e;
 	}
