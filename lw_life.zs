@@ -175,6 +175,14 @@ void __DoLWeaponDeath4FiresRand(lweapon wpn)
     Remove(wpn);
 }
 
+void __DoLWeaponDeath4FiresHV(lweapon wpn)
+{
+    for(int i=0; i<4; i++)
+        FireNonAngularLWeapon(LW_FIRE, CenterX(wpn)-8, CenterY(wpn)-8, DegtoRad(i), 100, wpn->Damage/2, wpn->Misc[LW_ZH_I_ON_DEATH_ARG], 0, 0);
+    Game->PlaySound(SFX_FIRE); // Only play sound once
+    Remove(wpn);
+}
+
 void __DoLWeaponDeath8Fires(lweapon wpn)
 {
     for(int i=0; i<270; i+=90)
