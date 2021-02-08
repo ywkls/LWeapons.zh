@@ -1,4 +1,4 @@
-//LWeapons.zh Version 1.4.6
+//LWeapons.zh Version 1.4.7
 
 //
 //Library for doing custom LWeapon movement, death effects, sounds and lifespans. With or without FFCS.
@@ -9,18 +9,18 @@ import "ffcscript.zh"
 import "ghost.zh"
 import "string.zh"
 
-import "LW_ZH/deprecated.z"
-import "LW_ZH/global.z"
-import "LW_ZH/genfunction.zh"
-import "LW_ZH/common.z"
-import "LW_ZH/update.z"
-import "LW_ZH/movement.z"
-import "LW_ZH/lweaponLife.z"
-import "LW_ZH/other.z"
-import "LW_ZH/scripts.z"
-import "LW_ZH/medallions.z"
-import "LW_ZH/hookshots.z"
-import "LW_ZH/caneofsomaria.z"
+import "LW_ZH/lw_deprecated.zs"
+import "LW_ZH/lw_globals.z"
+import "LW_ZH/lw_generic.zs"
+import "LW_ZH/lw_common.zs"
+import "LW_ZH/lw_update.zs"
+import "LW_ZH/lw_movement.zs"
+import "LW_ZH/lw_ife.zs"
+import "LW_ZH/lw_other.zs"
+import "LW_ZH/lw_scripts.zs"
+import "LW_ZH/lw_medallions.zs"
+import "LW_ZH/lw_hookshots.zs"
+import "LW_ZH/lw_somaria.zs"
 
 int LW_Vars[65536];//Array for extra LWeapon functions.
 
@@ -126,13 +126,16 @@ const int LW_ZH_I_ON_DEATH_ARG   = 14;//Lweapon index to determine what death ef
 
 //Lweapon movement flags.
 
+const int LWM_NONE				= 0;//To unset movement type.
 const int LWM_SINE_WAVE         = 1;//Lweapon that moves in a sine wave.
 const int LWM_CIRCLE            = 2;//LWeapon that moves in a circle around Link.
 const int LWM_HOMING            = 3;//Lweapon that homes in on enemies.
 const int LWM_BRANG             = 5;//LWeapon that acts like a boomerang.
+const int LWM_MELEE				= 6;//Lweapon that acts like a melee weapon.
 const int LWM_FULL_SCREEN		= 9;//LWeapon that covers the screen.
 const int LWM_STRAFE 			= 10;//LWeapon that causes strafing movement.
 const int LWM_THROW             = 15;//Lweapon that is thrown.
+const int LWM_ARC				= 16;//LWeapon that arcs.
 //const int LWM_BOUNCE			= 16;//LWeapon that bounces on the floor.
 const int LWM_CAROM				= 17;//LWeapon that bounces off walls.
 const int LWM_FALL              = 19;//Lweapon that falls from the air.
@@ -140,7 +143,6 @@ const int LWM_FALL              = 19;//Lweapon that falls from the air.
 //Not fully supported movement types.
 
 const int LWM_HOOKSHOT          = 4;//Lweapon that acts like a hookshot.
-const int LWM_MELEE				= 6;//Lweapon that acts like a melee weapon.
 const int LWM_DUAL_FX			= 7;//This lweapon causes one of more types of flags to be hit.
 const int LWM_CARRY				= 8;//This lweapon remains at rest relative to link.
 
@@ -153,6 +155,7 @@ const int LWMF_SLASH 				= 00000001000b;//This weapon slashs bushs, flowers and 
 const int LWMF_POUND 				= 00000010000b;//This weapon pounds hammer pegs.
 const int LWMF_TRACKER				= 00000100000b;//This weapon moves and changes appearance as you do.
 const int LWMF_REFLECTS_EWPN		= 00001000000b;//This lweapon reflects Eweapons.
+const int LWMF_TALL_LINK   			= 00010000000b;//Adjusts tracker for tall Link hitbox
 
 //Movement styles for Melee Lweapons
 //Not yet supported
@@ -186,7 +189,7 @@ const int LWF_STUNS_ENEMIES        = 00000000100b;//Stuns enemies.
 const int LWF_ZERO_G      		   = 00000001000b;//Ignores gravity.
 const int LWF_NORMALIZE			   = 00000010000b;//Sprite isn't flipped.
 const int LWF_INSTA_DELIVER        = 00000100000b;//Used with item pickup. Insta-delivers item to Link.
-const int LWF_LINK_NO_COLL		   = 00001000000b;//Link can't be hurt while this lweapon is active.
+//const int LWF_LINK_NO_COLL		   = 00001000000b;//Link can't be hurt while this lweapon is active. No longer supported
 const int LWF_LINK_FLOATS          = 00010000000b;//Link doesn't obey gravity while this is active.
 
 // Internal LWeapon flags
@@ -209,7 +212,7 @@ const int LWF_SHADOW			   = 01000000000b;//This lweapon casts a shadow.
 
 const int LWF_RETURN               = 00000010000b;//This lweapon is returning to the user.
 const int LWF_TEMP_PIERCE      	   = 10000000000b;//An lweapon that is colliding with an enemy which ignores it.
-const int LWF_IS_REFLECTED		   = 00100000000b;//This is a reflected lweapon.
+//const int LWF_IS_REFLECTED		   = 00100000000b;//This is a reflected lweapon. No longer supported
 
 
 // Arguments to SetLWeaponDeathEffect()
@@ -230,5 +233,6 @@ const int LWD_SBOMB_SHAKE		 = 11;//At death, super bomb explodes and shakes scre
 
 const int LWD_4_FIRES_DIAG       = 10;//At death, this lweapon makes 4 diagonal lweapons.
 const int LWD_4_FIRES_RANDOM     = 11;//At death, this lweapon makes 4 random lweapons.
+const int LWD_4_FIRES_HV     	   = 13;//At death, this lweapon makes 4 horizontal and vertical lweapons.
 const int LWD_8_FIRES            = 12;//At death, this lweapon makes 8 lweapons in all directions.
 const int LWD_FIRE               = 14;//At death, this lweapon makes another lweapon at its location.
