@@ -83,8 +83,8 @@ void UpdateLWZH(lweapon wpn){
 				__UpdateLWM_Melee(wpn);
 			else if(wpn->Misc[LW_ZH_I_MOVEMENT]==LWM_CARRY)
 				__UpdateLWM_Carry(wpn);
-			//else if(wpn->Misc[LW_ZH_I_MOVEMENT]==LWM_DUAL_FX)
-				//__UpdateLWM_Dual(wpn);
+			else if(wpn->Misc[LW_ZH_I_MOVEMENT]==LWM_ARC)
+				__UpdateLWM_Arc(wpn);
 			else if(wpn->Misc[LW_ZH_I_MOVEMENT]==LWM_FULL_SCREEN)
 				__UpdateLWM_FullScreen(wpn);
 			else if(wpn->Misc[LW_ZH_I_MOVEMENT]==LWM_STRAFE)
@@ -1468,6 +1468,31 @@ void Item_Spawn(int loc){
 	}
 }
 
+//Handles Lweapons that circle Link.
+
+void __UpdateLWM_Arc(lweapon wpn){
+	wpn->Misc[LW_ZH_I_WORK]= (wpn->Misc[LW_ZH_I_WORK]
+								+(wpn->Step/50))%360;
+	wpn->HitXOffset = VectorX(wpn->HitWidth,wpn->Misc[LW_ZH_I_WORK]);
+	wpn->HitYOffset = VectorY(wpn->HitHeight,wpn->Misc[LW_ZH_I_WORK]);
+	
+	wpn->Angle = DegtoRad(wpn->Misc[LW_ZH_I_WORK]);
+	if((wpn->Misc[LW_ZH_I_FLAGS]&LWF_NORMALIZE)==0)
+		SetLWeaponDir(wpn);
+	wpn->X=Link->X;
+	wpn->Y=Link->Y;	
+	wpn->DrawXOffset=wpn->HitXOffset;
+	wpn->DrawYOffset=wpn->HitYOffset;
+	DrawLWeapon(wpn);
+	if((wpn->Misc[LW_ZH_I_MOVEMENT_ARG2]&LWMF_SLASH)!=0){
+		int loc = ComboAt(wpn->X+8+wpn->HitXOffset,wpn->Y+8+wpn->HitYOffset);
+		DoDashSlash(loc,wpn->Misc[LW_ZH_I_WORK_3]);
+		Item_Spawn(loc);
+	}
+	if((wpn->Misc[LW_ZH_I_MOVEMENT_ARG2]&LWMF_REFLECTS_EWPN)!=0)
+		__UpdateLWMF_Reflect_EWpn(wpn);
+}
+
 void __Melee_LWeaponDir(lweapon wpn){
     float angle=__DirtoRad(Link->Dir);
     int dir;
@@ -1555,7 +1580,7 @@ void __UpdateLW_MS_Slash(lweapon wpn){
 // the appearance-related flags still need handled.
 void DrawLWeapon(lweapon wpn){
 	float angle;
-	
+	int tile;
 	if(wpn->Angular)
 		angle=RadtoDeg(wpn->Angle);
 	else{
@@ -1584,11 +1609,14 @@ void DrawLWeapon(lweapon wpn){
 		flip=0;
 	else
 		flip=2;
-	
+	if(!wpn->Misc[LW_ZH_I_MOVEMENT_ARG])
+		tile= wpn->Tile;
+	else
+		tile= wpn->Misc[LW_ZH_I_MOVEMENT_ARG];
 	// Currently, these are always drawn on layer 4.
 	// That should probably be changed...
 	Screen->DrawTile(4, wpn->X+wpn->DrawXOffset, wpn->Y-wpn->Z+wpn->DrawYOffset, 
-						wpn->Tile, 1, 1, wpn->CSet,
+						tile, 1, 1, wpn->CSet,
 						-1, -1, wpn->X+wpn->DrawXOffset, 
 						wpn->Y-wpn->Z+wpn->DrawYOffset, angle, flip, true, OP_OPAQUE);
 }
